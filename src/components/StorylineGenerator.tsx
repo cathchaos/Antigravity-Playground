@@ -1,11 +1,31 @@
 import { useState, useMemo, useEffect, memo, useCallback } from 'react';
 import { Sparkles, Star, Trash2, RefreshCw, Search, ChevronRight, Calendar, MessageSquare, Zap, TrendingUp } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { Database } from '../lib/database.types';
+import rosterData from '../data/roster.json';
 
-type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
-type Storyline = Database['public']['Tables']['storylines']['Row'];
-type StorylineInsert = Database['public']['Tables']['storylines']['Insert'];
+interface Wrestler {
+  id: string;
+  name: string;
+  brand: string;
+  alignment: string;
+  status: string;
+  title?: string | null;
+  image_url?: string | null;
+  gender?: 'Male' | 'Female';
+  cardLevel?: number; // 1: Jobber, 2: Midcard, 3: Upper Midcard, 4: Main Event, 5: Legend
+}
+
+interface Storyline {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  participants: string[];
+  execution_steps: string[];
+  promos?: string[];
+  key_lines?: string[];
+  created_at: string;
+  favorited: boolean;
+}
 
 interface TemplateDefinition {
   title: string;
@@ -83,47 +103,6 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           "The legend you knew is dead. I'm the reality you're afraid to face."
         ]
       },
-      {
-        title: 'The Gaslight Partner',
-        description: 'Jealous tag partner manipulates and blames their partner instead of a beatdown',
-        isFresh: true,
-        steps: [
-          'Heel intentionally misses a save, then blames the partner\'s positioning',
-          'Heel "gaslights" the partner in backstage segments, showing "concern" for their failing health',
-          'Heel convinces the management to put the partner in a series of "re-evaluation" matches',
-          'The partner snaps when they see the heel smiling at their defeat on the monitor',
-        ],
-        promos: [
-          'The "I\'m just doing this for your own good" segment.',
-          'The "Are you sure you\'re okay, [Name]?" concern-trolling promo.',
-        ],
-        key_lines: [
-          "I didn't fail you. You failed the team. I'm just the only one honest enough to tell you.",
-          "Everyone is talking about how you've lost a step. I'm defending you, but you keep proving them right.",
-          "Don't raise your voice at me. Your anger is why we're losing. Just listen to me, for once."
-        ]
-      },
-      {
-        title: 'The Shadow-Ban Boss',
-        description: 'Evil board member removes wrestler from graphics and social media',
-        isFresh: true,
-        steps: [
-          'Wrestler\'s entrance music fails to play, replaced by a generic track',
-          'Wrestler is edited out of the show\'s intro package and social media headers',
-          'A "Technical Error" prevents their name from appearing on the match graphic',
-          'The "Ghost in the Machine" match where they fight to regain their identity',
-        ],
-        promos: [
-          'The Corporate "Optimization" briefing.',
-          'Backstage segment where the boss claims the wrestler is "un-marketable" and thus, invisible.',
-        ],
-        key_lines: [
-          "You weren't fired. You were simply... de-prioritized by the algorithm.",
-          "If you aren't on the website, do you even exist for the shareholders?",
-          "Go ahead, hit me. No one will see it. We've already cut the feed to your specific camera."
-        ]
-      },
-
     ],
   },
   {
@@ -148,7 +127,6 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           "The streak ends at [Event Name]. I'm not just a roadblock, I'm the end of the road."
         ]
       },
-      // --- NEW FRESH IDEAS START HERE ---
       {
         title: 'The Algorithm',
         description: 'A tech-savvy heel uses AI and data analytics to predict moves',
@@ -168,347 +146,7 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           "I don't need luck. I have a 256-bit encryption on your career.",
           "You're not a superstar, you're a glitch in the system that I'm about to patch."
         ]
-      },
-      {
-        title: 'The Identity Thief',
-        description: 'Wrestler starts using rival gear, music, and finisher',
-        isFresh: true,
-        steps: [
-          'Wrestler comes out to the rivals music while rival is in the ring',
-          'Winning a match using the rivals signature finisher',
-          'Vandalizing the rivals locker room and stealing their specific ring gear',
-          'The "Who Am I?" psychological breakdown match',
-        ],
-        promos: [
-          'The "Imitation is the sincerest form of murder" segment.',
-          'Interview where the thief claims they are the "Upgraded Version" of the rival.',
-        ],
-        key_lines: [
-          "I look better in this gear than you ever did. I wear your legacy like a cheap coat.",
-          "It's not your finisher anymore. It's mine because I actually win with it.",
-          "Look at the screen, look at the music, look at the gear. The world has already forgotten you exist."
-        ]
-      },
-      {
-        title: 'The "Good Samaritan"',
-        description: 'Toxic positivity heel who refuses to fight and offers "therapy"',
-        isFresh: true,
-        steps: [
-          'Heel refuses to strike back, instead offering a hug after being hit',
-          'Staging a mandatory "Peace Summit" in the middle of the ring',
-          'Heel brings a licensed therapist to ringside to "evaluate" the face',
-          'The "Violent Brakthrough" where the face finally snaps due to the condescension',
-        ],
-        promos: [
-          'The Ring-side Meditation session.',
-          'Publicly "forgiving" the face for their "unrestrained anger issues".',
-        ],
-        key_lines: [
-          "I'm not mad at you for hitting me, [Name]. I'm just disappointed in your lack of emotional maturity.",
-          "Let's just breathe together. Conflict is a choice, and you're choosing poorly.",
-          "I forgive you for being inferior. It's not your fault, it's your upbringing."
-        ]
-      },
-      {
-        title: 'The Silent Saboteur',
-        description: 'Mystery whodunit with technical glitches and ring sabotage',
-        isFresh: true,
-        steps: [
-          'Microphone cuts out during the face\'s most important promo',
-          'Ring ropes "accidentally" snap during a high-flying move',
-          'Lights go pitch black every time the face goes for the pin',
-          'Reveal of the saboteur in the production truck, never saying a word',
-        ],
-        promos: [
-          'The "Dead Air" segment where a promo is ruined by feedback.',
-          'Security footage reveal that shows a hooded figure messing with cables.',
-        ],
-        key_lines: [
-          "(Silence)",
-          "(Static Noise plays over the PA system)",
-          "..."
-        ]
-      },
-      {
-        title: 'The Speedrun Specialist',
-        description: 'Cocky cardio-king sets 5-minute timers on the Titantron',
-        isFresh: true,
-        steps: [
-          'Timer starts on the screen as the bell rings',
-          'Heel walks out if the match goes past 5 minutes, claiming "time waste"',
-          'Refusing to enter the ring until 2 minutes are left on the clock',
-          'The "Iron Man" challenge where the face traps them in a 30-min match',
-        ],
-        promos: [
-          'The "Too Busy For You" backstage walk-and-talk.',
-          'Heel checking a luxury watch while the face is down.',
-        ],
-        key_lines: [
-          "You've got 300 seconds to impress me. If you don't, I'm going to dinner.",
-          "I didn't lose, I just stopped participating in a boring conversation.",
-          "Tick-tock. Your time as a relevant star is expiring."
-        ]
-      },
-      {
-        title: 'The Debt Collector',
-        description: 'Veteran demands a percentage of a rookie\'s winner\'s purse',
-        isFresh: true,
-        steps: [
-          'Veteran presents a "Contract" from the rookie\'s training days',
-          'Veteran sits at ringside and takes the rookie\'s bonus check from the timekeeper',
-          'Rookie forced to wrestle extra matches to "pay off interest"',
-          'The "Financial Freedom" Ladder match with the contract above the ring',
-        ],
-        promos: [
-          'The "I Made You" history lesson.',
-          'Backstage segment where the veteran takes the rookie\'s expensive watch as "partial payment".',
-        ],
-        key_lines: [
-          "Every drop of sweat you shed belongs to me. I own the sweat, the blood, and the 15%.",
-          "You wouldn't even be in this ring if I hadn't taught you how to tie your boots.",
-          "IRS stands for 'I'm Really Superior'. Pay up, kid."
-        ]
-      },
-      {
-        title: 'The Contractual Hostage',
-        description: 'Heel becomes the legal manager and forces demeaning chores',
-        isFresh: true,
-        steps: [
-          'Face loses a match with a "Legal Proxy" stipulation',
-          'Heel forces face to wax their car or carry their bags in the ring',
-          'Face forced into 3-on-1 handicap matches by their "manager"',
-          'The "Breach of Contract" match for the face\'s freedom',
-        ],
-        promos: [
-          'The "Check the Fine Print" segment.',
-          'Heel sipping champagne while the face scrubs the ring mat.',
-        ],
-        key_lines: [
-          "You work for me now. If you touch me, you quit. And if you quit, you're blacklisted forever.",
-          "I don't need a wrestler, I need a personal assistant who happens to take bumps.",
-          "Don't look at the crowd. Look at the shoes you haven't polished yet."
-        ]
-      },
-      {
-        title: 'The Legacy Eraser',
-        description: 'Veteran tries to legally "trademark" and delete a legend\'s history',
-        isFresh: true,
-        steps: [
-          'Heel vandalizes a Hall of Fame display case',
-          'Blurring out the legend\'s face in historical video packages',
-          'Served with a Cease & Desist for using their own name',
-          'The "Un-person" match where the loser is erased from the website',
-        ],
-        promos: [
-          'The "History Is Written By The Winners" manifesto.',
-          'Burning an old t-shirt of the legend in the ring center.',
-        ],
-        key_lines: [
-          "You're not a legend. You're a footnote that I'm currently white-outting.",
-          "I bought the rights to your nickname. Every time you say it, you owe me money.",
-          "The future doesn't have a room for fossils like you. I'm the asteroid."
-        ]
-      },
-      {
-        title: 'The Social Media Clout Feud',
-        description: 'Heel refuses to wrestle someone "not viral enough"',
-        isFresh: true,
-        steps: [
-          'Heel refuses to get in the ring because the face "doesn\'t trend"',
-          'Face has to perform viral stunts or win "qualifiers" for views',
-          'Heel livestreams the entire match on their phone while wrestling',
-          'The "Trending #1" match which is only viewable on social media',
-        ],
-        promos: [
-          'The "Check Your Stats" roast.',
-          'Comparing follower counts on the big screen.',
-        ],
-        key_lines: [
-          "You have 10,000 followers. My cat has 2 million. I'll wrestle the cat first.",
-          "I don't wrestle nobodies. Get a blue checkmark, then we talk.",
-          "You're not a main eventer, you're an ad that people want to skip."
-        ]
-      },
-      {
-        title: 'The Sleep Agent',
-        description: 'Psychological feud using trigger words to cause "blackouts"',
-        isFresh: true,
-        steps: [
-          'Heel plays a specific frequency over the PA system',
-          'Face suddenly freezes mid-match or attacks their own partner',
-          'Face has no memory of the events, becoming paranoid and isolated',
-          'The "Internal War" match inside an empty, dark arena',
-        ],
-        promos: [
-          'The "Manchurian Candidate" reveal.',
-          'Heel whispering the trigger word into a microphone backstage.',
-        ],
-        key_lines: [
-          "I didn't make you do it. I just gave your subconscious permission to be yourself.",
-          "When the bell rings, I own your mind. When the clock strikes, you belong to the dark.",
-          "You're a weapon, and I'm the one with the safety off."
-        ]
-      },
-      {
-        title: 'The Ring Architect',
-        description: 'Heel alters the ring environment every week for "home-court"',
-        isFresh: true,
-        steps: [
-          'Shrinking the ring size by 4 feet for a match',
-          'Removing all turnbuckle pads "for safety inspections"',
-          'Adding a second set of ropes or a slanted ring floor',
-          'The "Master Builder" match where the ring is a literal cage of logic',
-        ],
-        promos: [
-          'The "Blueprint for Greatness" presentation.',
-          'Heel measuring the ring with a laser tool while the face is talking.',
-        ],
-        key_lines: [
-          "You can't adapt to the environment. I AM the environment.",
-          "The standard ring is for standard wrestlers. I'm designing your defeat.",
-          "Measurements don't lie. You're exactly 3 inches too slow for this layout."
-        ]
-      },
-      {
-        title: 'The Sponsorship Hijack',
-        description: 'Heel ruins real-world endorsements and steals contracts',
-        isFresh: true,
-        steps: [
-          'Heel ruins a commercial shoot for the babyface',
-          'Getting a major endorsement contract moved to the heel\'s name',
-          'Replacing the face\'s sponsored product with a gross alternative',
-          'The "Logo On The Line" match for the sponsorship rights',
-        ],
-        promos: [
-          'The "Brand Ambassador" takeover.',
-          'Heel mocking the face while eating the face\'s sponsored food.',
-        ],
-        key_lines: [
-          "They didn't want a hero. They wanted a face people actually want to look at.",
-          "I'm the multi-million dollar brand. You're the clearance rack version.",
-          "Consider this a corporate restructuring. You've been liquidated."
-        ]
-      },
-      {
-        title: 'The Record Breaker',
-        description: 'Heel obsessed with obscure stats and avoiding specific moves',
-        isFresh: true,
-        steps: [
-          'Heel wrestles entire match solely to avoid taking a vertical suplex',
-          'Heel brings a statistician to ringside to track "Minutes Without Pain"',
-          'Face tries every possible combination to land the "forbidden" move',
-          'The "Final Stat" match: If the stat breaks, the heel retires',
-        ],
-        promos: [
-          'The "Obscure History" lecture.',
-          'Presenting a trophy for a fake, highly specific record.',
-        ],
-        key_lines: [
-          "I haven't taken a suplex since 2018. Why would I let a peasant like you break the streak?",
-          "Statistics are the only truth. And the truth is, you're a zero.",
-          "Check the data. I'm literally untouchable in the third quarter of the match."
-        ]
-      },
-      {
-        title: 'The Fan Proxy',
-        description: 'Heel lets a "disgruntled fan" call the strategy via headset',
-        isFresh: true,
-        steps: [
-          'Heel brings a random fan (hired) to ringside to "oversee" the match',
-          'Heel stops mid-match to take tactical advice from the fan',
-          'The fan is given "General Manager" powers for one night',
-          'The "Fan\'s Choice" match with a bizarre stipulations',
-        ],
-        promos: [
-          'The "I\'m Wrestling For You" (mocking fans) segment.',
-          'Heel letting the fan cut a promo on the babyface.',
-        ],
-        key_lines: [
-          "I'm not the bad guy. This guy in row 4 says you suck, and I'm just his instrument.",
-          "Everything I do is for the 'Universe'. Specifically, this one guy who paid for a front row seat.",
-          "The fans are tired of you. [Fan Name] here has a much better plan for this brand."
-        ]
-      },
-      {
-        title: 'The Career Simulation',
-        description: 'Young cocky heel treats WWE like a video game (E-sports style)',
-        isFresh: true,
-        steps: [
-          'Heel complains about "button lag" after missing a move',
-          'Treating the babyface like a "Level 1 NPC" or a "Tutorial Boss"',
-          'Trying to "Save State" or "Restart" after losing a segment',
-          'The "Final Boss" Hell in a Cell match',
-        ],
-        promos: [
-          'The "Leveling Up" backstage montage.',
-          'Heel using a controller during their entrance.',
-        ],
-        key_lines: [
-          "You're just an NPC in my career mode. I'm the one holding the controller.",
-          "I'm speedrunning this brand. You're just a cutscene I'm skipping.",
-          "Git gud. Your stats are balanced for the mid-card, mine are meta-breaking."
-        ]
-      },
-      {
-        title: 'The Submission Monster',
-        description: 'A giant who dismantles limbs with technical precision rather than power',
-        isFresh: true,
-        steps: [
-          'Monster ignores a strike, focusing solely on an wrist-lock or ankle-pick',
-          'Winning a squash match via a rare, complex technical submission',
-          'Backstage "Anatomy Lesson" where they show how they will break the face',
-          'The "Limb-on-the-Line" match with a specific target (e.g. left arm)',
-        ],
-        promos: [
-          'The "Silence is Violent" slow-motion video package.',
-          'Monster speaking in a calm, intellectual voice about joint manipulation.',
-        ],
-        key_lines: [
-          "Gravity is a lie. Leverage is the only truth in this ring.",
-          "I don't need to throw you. I just need one inch of your tendon.",
-          "You think I'm a beast? No. I'm a surgeon, and the ring is my operating table."
-        ]
-      },
-      {
-        title: 'The Manager Auction',
-        description: 'Two wrestlers compete for the exclusive rights to hire a world-class manager',
-        isFresh: true,
-        steps: [
-          'Legendary manager enters free agency, sparking a bidding war',
-          'Wrestlers try to "impress" the manager with their win-loss record',
-          'Manager sets a series of "Trials" for both potential clients',
-          'The "Signed Contract" match: Winner gets the manager, loser is banned from hiring anyone',
-        ],
-        promos: [
-          'The "Portfolio Review" segment in the ring.',
-          'Manager sitting on a throne at ringside, evaluating both wrestlers.',
-        ],
-        key_lines: [
-          "I'm not a trophy. I'm the key to the main event. And you look like a mid-carder.",
-          "Prove you can follow instructions for 10 minutes, and I'll make you a millionaire.",
-          "This isn't about love. It's about ROI."
-        ]
-      },
-      {
-        title: 'Hard Times Bootcamp',
-        description: 'Returning star tries to institute a 1980s-style bootcamp for "soft" talent',
-        isFresh: true,
-        steps: [
-          'Returning star interrupts a locker room party, calling it "unprofessional"',
-          'Forcing the locker room to do 500 squats before the show starts',
-          'Attacking anyone using "fancy" modern wrestling flips',
-          'The "Old School Rules" match: No mats, no pads, just "hard times"',
-        ],
-        promos: [
-          'The "Locker Room has gone soft" rant.',
-          'The "In my day..." history lesson that lasts way too long.',
-        ],
-        key_lines: [
-          "You guys spent two hours on your hair and ten minutes on your bridge. Soft.",
-          "The business didn't leave you. You left the business for a TikTok dance.",
-          "I'm going to beat the 1980s back into your 2026 heart."
-        ]
-      },
+      }
     ],
   },
   {
@@ -532,18 +170,12 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           "If you want to get to him, you've gotta go through me first. And I'm not the man I was yesterday.",
           "I don't expect your forgiveness. I just expect to earn your respect."
         ]
-      },
-    ],
-  },
+      }
+    ]
+  }
 ];
 
-interface WrestlerSelectButtonProps {
-  wrestler: Wrestler;
-  isSelected: boolean;
-  onToggle: (id: string) => void;
-}
-
-const WrestlerSelectButton = memo(({ wrestler, isSelected, onToggle }: WrestlerSelectButtonProps) => (
+const WrestlerSelectButton = memo(({ wrestler, isSelected, onToggle }: any) => (
   <button
     onClick={() => onToggle(wrestler.id)}
     className={`relative p-3 rounded-xl border transition-all text-left overflow-hidden ${isSelected
@@ -566,271 +198,177 @@ export function StorylineGenerator() {
   const [storylines, setStorylines] = useState<Storyline[]>([]);
   const [wrestlers, setWrestlers] = useState<Wrestler[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedType, setSelectedType] = useState('Heel Turn');
-
-  // Performance: Debounce search input to prevent re-renders on every keystroke
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const [wrestlersRes, storylinesRes] = await Promise.all([
-        supabase.from('wrestlers').select('*').order('name'),
-        supabase.from('storylines').select('*').order('created_at', { ascending: false })
-      ]);
-
-      if (wrestlersRes.error) throw wrestlersRes.error;
-      if (storylinesRes.error) throw storylinesRes.error;
-
-      setWrestlers(wrestlersRes.data || []);
-      setStorylines(storylinesRes.data || []);
-    } catch (error) {
-      console.error('Error fetching storylines data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
   const [templatePreference, setTemplatePreference] = useState<'Classic' | 'Fresh'>('Classic');
   const [selectedWrestlers, setSelectedWrestlers] = useState<string[]>([]);
   const [showSaved, setShowSaved] = useState(false);
   const [showRoadmapForm, setShowRoadmapForm] = useState(false);
+  const [geminiKey, setGeminiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [customContext, setCustomContext] = useState('');
 
-  // Roadmap Form State
   const [roadmapData, setRoadmapData] = useState({
     championId: '',
     duration: '3 Months',
     theme: 'Dominant Reign',
     feudCount: 3,
     feudPreference: 'Fresh' as 'Certain' | 'Fresh',
-    targetTitle: 'World Heavyweight Championship'
+    targetTitle: 'World Heavyweight Championship',
+    customContext: '',
+    useAI: false
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const savedRoster = localStorage.getItem('wwe_roster');
+    let actualRoster = savedRoster ? JSON.parse(savedRoster) : rosterData;
+
+    actualRoster = (actualRoster as Wrestler[]).map(w => {
+      if (w.gender && w.cardLevel) return w;
+      const titleLower = (w.title || '').toLowerCase();
+      const nameLower = w.name.toLowerCase();
+      let gender: 'Male' | 'Female' = 'Male';
+      if (titleLower.includes('women') ||
+        ['rhe', 'becky', 'liv ', 'natti', 'jade', 'asuka', 'bayle', 'charlotte', 'iyo'].some(n => nameLower.includes(n))) {
+        gender = 'Female';
+      }
+      let level = 2;
+      if (w.title) level = 4;
+      if (['punk', 'cody', 'knight', 'orton', 'reigns', 'drew', 'gunther', 'rhea', 'belair'].some(n => nameLower.includes(n))) {
+        level = 4;
+      }
+      if (['rayo', 'kit ', 'akira', 'tozawa', 'bravo'].some(n => nameLower.includes(n))) {
+        level = 1;
+      }
+      return { ...w, gender, cardLevel: level };
+    });
+
+    setWrestlers(actualRoster);
+    const savedStorylines = localStorage.getItem('wwe_storylines');
+    if (savedStorylines) setStorylines(JSON.parse(savedStorylines));
+    setLoading(false);
+  }, []);
+
+  const saveToStorage = (newStorylines: Storyline[]) => {
+    setStorylines(newStorylines);
+    localStorage.setItem('wwe_storylines', JSON.stringify(newStorylines));
+  };
 
   const filteredWrestlers = useMemo(() => {
     return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [wrestlers, debouncedSearch]);
 
-  async function saveStoryline(newStoryline: Partial<Storyline>) {
-    try {
-      const { error } = await supabase
-        .from('storylines')
-        .insert([{
-          title: newStoryline.title!,
-          description: newStoryline.description!,
-          type: newStoryline.type!,
-          participants: newStoryline.participants!,
-          execution_steps: newStoryline.execution_steps!,
-          promos: newStoryline.promos || [],
-          key_lines: newStoryline.key_lines || [],
-          created_at: new Date().toISOString(),
-          favorited: false
-        } as StorylineInsert]);
+  const toggleWrestlerSelection = useCallback((id: string) => {
+    setSelectedWrestlers(prev => prev.includes(id) ? prev.filter(wId => wId !== id) : [...prev, id]);
+  }, []);
 
-      if (error) throw error;
-      fetchData();
-    } catch (error) {
-      console.error('Error saving storyline:', error);
-      alert('Error saving storyline. Check permissions.');
-    }
-  }
+  const suggestRival = useCallback((type: 'Certain' | 'Fresh') => {
+    if (selectedWrestlers.length === 0) return;
+    const currentId = selectedWrestlers[0];
+    const current = wrestlers.find(w => w.id === currentId);
+    if (!current) return;
 
-  function suggestRival(type: 'Fresh' | 'Certain') {
-    if (selectedWrestlers.length !== 1) return;
-    const champ = wrestlers.find(w => w.id === selectedWrestlers[0]);
-    if (!champ) return;
-
-    let potential = wrestlers.filter(w => w.brand === champ.brand && w.id !== champ.id);
-
-    if (type === 'Fresh') {
-      potential = potential.filter(w => w.alignment !== champ.alignment);
-    } else {
-      potential = potential.filter(w => w.title || Math.random() > 0.5);
-    }
-
-    const rival = potential[Math.floor(Math.random() * potential.length)];
-    if (rival) {
-      setSelectedWrestlers([...selectedWrestlers, rival.id]);
-    } else {
-      alert("No suitable rival found in the current roster.");
-    }
-  }
-
-  function generateStoryline() {
-    if (selectedWrestlers.length === 0) {
-      alert('Please select at least one superstar');
-      return;
-    }
-
-    const typeTemplates = STORYLINE_TEMPLATES.find(t => t.type === selectedType);
-    if (!typeTemplates) return;
-
-    // Filter based on preference
-    let available = typeTemplates.templates;
-    if (templatePreference === 'Fresh') {
-      available = available.filter(t => t.isFresh);
-    } else if (templatePreference === 'Classic') {
-      available = available.filter(t => !t.isFresh);
-    }
-
-    // If no filtered templates exist, fallback to any in category
-    if (available.length === 0) available = typeTemplates.templates;
-
-    const randomTemplate = available[Math.floor(Math.random() * available.length)];
-
-    const participantNamesArray = selectedWrestlers.map(id => {
-      const wrestler = wrestlers.find(w => w.id === id);
-      return wrestler?.name || 'Unknown';
+    const brandWrestlers = wrestlers.filter(w => w.brand === current.brand && w.id !== current.id);
+    const logicalOpponents = brandWrestlers.filter(w => {
+      if (w.gender !== (current.gender || 'Male')) return false;
+      if ((current.cardLevel || 2) >= 3 && (w.cardLevel || 2) <= 1) return false;
+      return true;
     });
 
-    let customizedTitle = randomTemplate.title;
-    let customizedDescription = randomTemplate.description;
-
-    if (selectedWrestlers.length === 1) {
-      const name = participantNamesArray[0];
-      customizedTitle = `${randomTemplate.title}: ${name}`;
-      customizedDescription = `${name} ${randomTemplate.description.toLowerCase()}`;
-    } else if (selectedWrestlers.length >= 2) {
-      const names = participantNamesArray.join(' & ');
-      customizedTitle = `${randomTemplate.title}: ${names}`;
+    const pool = logicalOpponents.length > 0 ? logicalOpponents : brandWrestlers;
+    let possible: Wrestler[];
+    if (type === 'Fresh') {
+      possible = pool.filter(w => w.alignment !== current.alignment);
+    } else {
+      possible = pool.filter(w => (w.cardLevel || 2) >= 3);
     }
 
-    const newStoryline = {
-      title: customizedTitle,
-      description: customizedDescription,
-      type: selectedType,
-      participants: selectedWrestlers,
-      execution_steps: randomTemplate.steps,
-      promos: randomTemplate.promos,
-      key_lines: randomTemplate.key_lines,
-    };
+    if (possible.length > 0) {
+      const rival = possible[Math.floor(Math.random() * possible.length)];
+      setSelectedWrestlers([currentId, rival.id]);
+    }
+  }, [selectedWrestlers, wrestlers]);
 
-    saveStoryline(newStoryline);
-    setShowSaved(true);
-    setSelectedWrestlers([]);
+  async function generateStoryline() {
+    if (selectedWrestlers.length === 0) return;
+    if (roadmapData.useAI && !geminiKey) { alert('API Key Required'); return; }
+
+    setIsGeneratingAI(true);
+    try {
+      let title, description, steps, promos, key_lines;
+      const participantsNames = selectedWrestlers.map(id => wrestlers.find(w => w.id === id)?.name || 'Unknown');
+
+      if (roadmapData.useAI) {
+        const prompt = `Generate a WWE storyline for: ${participantsNames.join(' & ')}. Type: ${selectedType}. Notes: ${customContext}. Return JSON { "title": "...", "description": "...", "steps": ["..."], "promos": ["..."], "key_lines": ["..."] }`;
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+          method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const d = await resp.json();
+        const j = JSON.parse(d.candidates[0].content.parts[0].text.match(/\{[\s\S]*\}/)![0]);
+        title = j.title; description = j.description; steps = j.steps; promos = j.promos || []; key_lines = j.key_lines || [];
+      } else {
+        const cat = STORYLINE_TEMPLATES.find(t => t.type === selectedType);
+        const template = cat!.templates[Math.floor(Math.random() * cat!.templates.length)];
+        title = `${template.title}: ${participantsNames.join(' & ')}`;
+        description = template.description + (customContext ? ` [Note: ${customContext}]` : '');
+        steps = template.steps; promos = template.promos; key_lines = template.key_lines;
+      }
+
+      const newS = { id: crypto.randomUUID(), title, description, type: selectedType, participants: selectedWrestlers, execution_steps: steps, promos, key_lines, created_at: new Date().toISOString(), favorited: false };
+      saveToStorage([newS, ...storylines]);
+      setShowSaved(true); setSelectedWrestlers([]); setCustomContext('');
+    } catch (e) { alert('AI Error'); } finally { setIsGeneratingAI(false); }
   }
 
   async function generateLongTermRoadmap() {
     const champ = wrestlers.find(w => w.id === roadmapData.championId);
-    if (!champ) {
-      alert('Please select a superstar (champion) first');
-      return;
-    }
+    if (!champ) return;
+    setIsGeneratingAI(true);
+    try {
+      const newRoadmaps: Storyline[] = [];
+      const pool = wrestlers.filter(w => w.brand === champ.brand && w.id !== champ.id && w.gender === champ.gender);
 
-    const newRoadmaps: StorylineInsert[] = [];
-    const brandWrestlers = wrestlers.filter(w => w.brand === champ.brand && w.id !== champ.id);
+      for (let i = 0; i < roadmapData.feudCount; i++) {
+        let opp = pool[Math.floor(Math.random() * pool.length)];
+        let title, description, steps, promos, key_lines;
 
-    for (let i = 0; i < roadmapData.feudCount; i++) {
-      let opponent: Wrestler | undefined;
+        if (roadmapData.useAI) {
+          const prompt = `Generate long-term WWE feud: ${champ.name} vs ${opp.name} for ${roadmapData.targetTitle}. Theme: ${roadmapData.theme}. Note: ${roadmapData.customContext}. Return JSON { "title": "...", "description": "...", "steps": ["..."], "promos": ["..."], "key_lines": ["..."] }`;
+          const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+            method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+          });
+          const d = await resp.json();
+          const j = JSON.parse(d.candidates[0].content.parts[0].text.match(/\{[\s\S]*\}/)![0]);
+          title = j.title; description = j.description; steps = j.steps; promos = j.promos; key_lines = j.key_lines;
+        } else {
+          title = `[Roadmap] ${champ.name} vs ${opp.name}`;
+          description = `Reign for ${roadmapData.targetTitle} (${roadmapData.theme})`;
+          steps = ["Intense confrontation", "Contract signing", "Go-home brawl", "Premium Live Event Match"];
+          promos = []; key_lines = [];
+        }
 
-      if (roadmapData.feudPreference === 'Fresh') {
-        const potentialOpponents = brandWrestlers.filter(w => w.alignment !== champ.alignment);
-        opponent = potentialOpponents[Math.floor(Math.random() * potentialOpponents.length)];
-      } else {
-        opponent = brandWrestlers[Math.floor(Math.random() * brandWrestlers.length)];
+        newRoadmaps.push({ id: crypto.randomUUID(), title, description, type: 'Long-term Roadmap', participants: [champ.id, opp.id], execution_steps: steps, promos, key_lines, created_at: new Date().toISOString(), favorited: false });
       }
-
-      if (!opponent) opponent = brandWrestlers[0];
-
-      // Pick between Fresh and certain templates for the roadmap too
-      const freshCat = STORYLINE_TEMPLATES.find(t => t.type === 'Fresh Feud')?.templates || [];
-      const templates = roadmapData.feudPreference === 'Fresh' ? freshCat.filter(t => t.isFresh) : freshCat.filter(t => !t.isFresh);
-      const template = (templates.length > 0 ? templates : freshCat)[Math.floor(Math.random() * (templates.length > 0 ? templates.length : freshCat.length))];
-
-      if (template) {
-        newRoadmaps.push({
-          title: `[Roadmap] ${champ.name} vs ${opponent.name} (${template.title})`,
-          description: `Strategic booking for ${champ.name}'s pursuit/defense of the ${roadmapData.targetTitle} during the ${roadmapData.duration} plan.`,
-          type: 'Long-term Roadmap',
-          participants: [champ.id, opponent.id],
-          execution_steps: template.steps,
-          promos: template.promos,
-          key_lines: template.key_lines,
-        });
-      }
-    }
-
-    try {
-      const { error } = await supabase
-        .from('storylines')
-        .insert(newRoadmaps.map(r => ({
-          title: r.title!,
-          description: r.description!,
-          type: r.type!,
-          participants: r.participants!,
-          execution_steps: r.execution_steps!,
-          promos: r.promos || [],
-          key_lines: r.key_lines || [],
-          created_at: new Date().toISOString(),
-          favorited: false
-        } as StorylineInsert)));
-
-      if (error) throw error;
-      fetchData();
-      setShowSaved(true);
-      setShowRoadmapForm(false);
-      alert(`Generated ${roadmapData.feudCount}-phase roadmap for ${champ.name}!`);
-    } catch (error) {
-      console.error('Error saving roadmap:', error);
-      alert('Error saving roadmap. Check permissions.');
-    }
+      saveToStorage([...newRoadmaps, ...storylines]);
+      setShowSaved(true); setShowRoadmapForm(false);
+    } catch (e) { alert('AI Error'); } finally { setIsGeneratingAI(false); }
   }
 
-  async function handleDelete(id: string) {
-    try {
-      const { error } = await supabase
-        .from('storylines')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-      setStorylines(storylines.filter(s => s.id !== id));
-    } catch (error) {
-      console.error('Error deleting storyline:', error);
-      alert('Error deleting script. Check permissions.');
-    }
-  }
-
-  async function toggleFavorite(id: string) {
-    const storyline = storylines.find(s => s.id === id);
-    if (!storyline) return;
-
-    try {
-      const { error } = await supabase
-        .from('storylines')
-        .update({ favorited: !storyline.favorited })
-        .eq('id', id);
-
-      if (error) throw error;
-      setStorylines(storylines.map(s => s.id === id ? { ...s, favorited: !storyline.favorited } : s));
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-    }
-  }
-
-  const toggleWrestlerSelection = useCallback((id: string) => {
-    setSelectedWrestlers(prev =>
-      prev.includes(id) ? prev.filter(wId => wId !== id) : [...prev, id]
-    );
-  }, []);
+  const handleDelete = (id: string) => saveToStorage(storylines.filter(s => s.id !== id));
+  const toggleFavorite = (id: string) => saveToStorage(storylines.map(s => s.id === id ? { ...s, favorited: !s.favorited } : s));
 
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'Heel Turn': return 'bg-red-500/20 text-red-400 border-red-500/50';
       case 'Face Turn': return 'bg-blue-500/20 text-blue-400 border-blue-500/50';
-      case 'Fresh Feud': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
       case 'Long-term Roadmap': return 'bg-purple-500/20 text-purple-400 border-purple-500/50';
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+      default: return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
     }
   };
 
@@ -846,133 +384,64 @@ export function StorylineGenerator() {
             <p className="text-gray-400 text-sm">Booking Tomorrow's Main Events Today</p>
           </div>
         </div>
-
         <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => setShowRoadmapForm(!showRoadmapForm)}
-            className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-purple-600/50 text-purple-400 rounded-xl font-bold hover:bg-purple-600 hover:text-white transition-all active:scale-95 shadow-xl"
-          >
-            <Calendar className="w-5 h-5" />
-            Roadmap Architect
+          <button onClick={() => setShowRoadmapForm(!showRoadmapForm)} className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-purple-600/50 text-purple-400 rounded-xl font-bold hover:bg-purple-600 hover:text-white transition-all">
+            <Calendar className="w-5 h-5" /> Roadmap Architect
           </button>
-          <button
-            onClick={() => setShowSaved(!showSaved)}
-            className="flex items-center gap-2 px-8 py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition-all shadow-lg hover:shadow-purple-600/20 active:scale-95"
-          >
-            <Star className={`w-5 h-5 ${showSaved ? 'fill-current' : ''}`} />
-            {showSaved ? 'Back to Generator' : 'Saved Scripts'}
+          <button onClick={() => setShowSaved(!showSaved)} className="flex items-center gap-2 px-8 py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition-all shadow-lg">
+            <Star className={`w-5 h-5 ${showSaved ? 'fill-current' : ''}`} /> {showSaved ? 'Back to Generator' : 'Saved Scripts'}
           </button>
         </div>
       </div>
 
       {showRoadmapForm && (
-        <div className="bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-purple-500/50 p-8 shadow-2xl animate-in zoom-in-95 duration-300">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-purple-500/20 rounded-lg"><TrendingUp className="w-6 h-6 text-purple-400" /></div>
-            <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">Long-Term Booking Plan</h3>
-          </div>
-
+        <div className="bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-purple-500/50 p-8 shadow-2xl animate-in zoom-in-95">
+          <h3 className="text-xl font-black text-white uppercase italic mb-8">Long-Term Booking Plan</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-3 pb-8 border-b border-gray-700/50">
+              <div className="flex flex-col sm:flex-row items-center gap-6 justify-between bg-gray-950/50 p-6 rounded-3xl border border-purple-500/20">
+                <div className="flex items-center gap-3">
+                  <Sparkles className="w-5 h-5 text-purple-400" />
+                  <div>
+                    <h4 className="text-white font-black uppercase text-xs">Gemini Engine</h4>
+                    <p className="text-[10px] text-gray-500">Provide your Google AI key for brilliance.</p>
+                  </div>
+                </div>
+                <div className="flex-1 max-w-md w-full">
+                  <input type="password" placeholder="API Key..." value={geminiKey} onChange={(e) => { setGeminiKey(e.target.value); localStorage.setItem('gemini_api_key', e.target.value); }} className="w-full bg-gray-900 border border-gray-800 rounded-xl py-2 px-4 text-xs text-purple-300 outline-none focus:ring-1 focus:ring-purple-500" />
+                </div>
+              </div>
+            </div>
             <div className="space-y-2">
-              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Target Superstar</label>
-              <select
-                value={roadmapData.championId}
-                onChange={(e) => setRoadmapData({ ...roadmapData, championId: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-purple-600 outline-none shadow-inner"
-              >
+              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Superstar</label>
+              <select value={roadmapData.championId} onChange={(e) => setRoadmapData({ ...roadmapData, championId: e.target.value })} className="w-full bg-gray-950 border border-gray-800 rounded-2xl py-3 px-5 text-white outline-none focus:ring-2 focus:ring-purple-600 transition-all">
                 <option value="">Select Talent</option>
-                {wrestlers.map(w => <option key={w.id} value={w.id}>{w.name} ({w.brand})</option>)}
+                {wrestlers.map(w => <option key={w.id} value={w.id}>{w.name} ({w.gender === 'Female' ? 'Women\'s' : w.brand})</option>)}
               </select>
             </div>
-
             <div className="space-y-2">
-              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Booking Window</label>
-              <select
-                value={roadmapData.duration}
-                onChange={(e) => setRoadmapData({ ...roadmapData, duration: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-purple-600 outline-none shadow-inner"
-              >
-                <option value="3 Months">3 Months</option>
-                <option value="6 Months">6 Months</option>
-                <option value="Road to WrestleMania">Road to WrestleMania</option>
-                <option value="Post-Draft Reset">Post-Draft Reset</option>
+              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Theme</label>
+              <select value={roadmapData.theme} onChange={(e) => setRoadmapData({ ...roadmapData, theme: e.target.value })} className="w-full bg-gray-950 border border-gray-800 rounded-2xl py-3 px-5 text-white outline-none focus:ring-2 focus:ring-purple-600 transition-all">
+                <option value="Dominant Reign">Dominant Reign</option><option value="Redemption">Redemption Arc</option>
               </select>
             </div>
-
             <div className="space-y-2">
-              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Creative Narrative</label>
-              <select
-                value={roadmapData.theme}
-                onChange={(e) => setRoadmapData({ ...roadmapData, theme: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-purple-600 outline-none shadow-inner"
-              >
-                <option value="Dominant Reign">Dominant Reign</option>
-                <option value="Heel Authority Force">Heel Authority Force</option>
-                <option value="Heroic Redemption Arc">Heroic Redemption Arc</option>
-                <option value="Struggle for Power">Struggle for Power</option>
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Target Championship</label>
-              <select
-                value={roadmapData.targetTitle}
-                onChange={(e) => setRoadmapData({ ...roadmapData, targetTitle: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-purple-600 outline-none shadow-inner"
-              >
-                {WWE_CHAMPIONSHIPS.map(title => (
-                  <option key={title} value={title}>{title}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Rivalry Allocation</label>
-              <div className="flex gap-2">
-                {(['Fresh', 'Certain'] as const).map(p => (
-                  <button
-                    key={p}
-                    onClick={() => setRoadmapData({ ...roadmapData, feudPreference: p })}
-                    className={`flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all border ${roadmapData.feudPreference === p ? 'bg-purple-600 border-purple-500 text-white shadow-lg' : 'bg-gray-900 border-gray-700 text-gray-500 hover:text-gray-300'}`}
-                  >
-                    {p} Rivals
-                  </button>
-                ))}
+              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Method</label>
+              <div className="flex gap-2 p-1 bg-gray-950 rounded-2xl border border-gray-800">
+                <button onClick={() => setRoadmapData({ ...roadmapData, useAI: false })} className={`flex-1 py-2 rounded-xl text-[10px] font-black ${!roadmapData.useAI ? 'bg-purple-600 text-white' : 'text-gray-500'}`}>Template</button>
+                <button onClick={() => setRoadmapData({ ...roadmapData, useAI: true })} className={`flex-1 py-2 rounded-xl text-[10px] font-black ${roadmapData.useAI ? 'bg-purple-600 text-white' : 'text-gray-500'}`}>Gemini AI</button>
               </div>
-              <p className="text-[9px] text-gray-600 mt-1 italic pl-1">
-                {roadmapData.feudPreference === 'Fresh' ? '* Deep cuts: Story-heavy, experimental concepts' : '* Blockbuster: Classic power-struggle rivalries'}
-              </p>
             </div>
-
-            <div className="space-y-2">
-              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Feud Count</label>
-              <div className="flex gap-2">
-                {[2, 3, 4, 5].map(n => (
-                  <button
-                    key={n}
-                    onClick={() => setRoadmapData({ ...roadmapData, feudCount: n })}
-                    className={`flex-1 py-3 rounded-xl font-bold transition-all border ${roadmapData.feudCount === n ? 'bg-purple-600 border-purple-500 text-white' : 'bg-gray-900 border-gray-700 text-gray-500 hover:text-gray-300'}`}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
+            <div className="lg:col-span-3 space-y-2">
+              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Director's Note</label>
+              <textarea placeholder="e.g. He's a lonely wolf..." value={roadmapData.customContext} onChange={(e) => setRoadmapData({ ...roadmapData, customContext: e.target.value })} className="w-full bg-gray-950 border border-gray-800 rounded-3xl py-4 px-6 text-sm text-white focus:ring-2 focus:ring-purple-600 outline-none min-h-[100px]" />
             </div>
           </div>
-
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={generateLongTermRoadmap}
-              className="flex-1 py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black uppercase tracking-widest text-sm rounded-2xl shadow-xl hover:from-purple-500 hover:to-pink-500 transition-all active:scale-95"
-            >
-              Initialize Grand Plan
+          <div className="mt-8 flex gap-4">
+            <button onClick={generateLongTermRoadmap} disabled={isGeneratingAI || !roadmapData.championId} className="flex-1 py-4 bg-purple-600 text-white font-black uppercase text-sm rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50">
+              {isGeneratingAI ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Start Plan'}
             </button>
-            <button
-              onClick={() => setShowRoadmapForm(false)}
-              className="px-10 py-5 bg-gray-700 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-gray-600 transition-all active:scale-95"
-            >
-              Cancel
-            </button>
+            <button onClick={() => setShowRoadmapForm(false)} className="px-8 py-4 bg-gray-700 text-white font-black uppercase text-sm rounded-2xl">Cancel</button>
           </div>
         </div>
       )}
@@ -981,124 +450,64 @@ export function StorylineGenerator() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 space-y-6 shadow-xl">
-              <div className="space-y-4">
-                <label className="text-gray-400 text-xs font-black uppercase tracking-widest pl-1">Storyline Category</label>
-                <div className="grid grid-cols-1 gap-2">
-                  {STORYLINE_TEMPLATES.map((template) => (
-                    <button
-                      key={template.type}
-                      onClick={() => setSelectedType(template.type)}
-                      className={`flex items-center justify-between px-4 py-3 rounded-xl font-bold transition-all border ${selectedType === template.type
-                        ? 'bg-purple-600 border-purple-500 text-white shadow-lg translate-x-1'
-                        : 'bg-gray-900 border-gray-700 text-gray-400 hover:border-purple-500/50'
-                        }`}
-                    >
-                      {template.type}
-                      <ChevronRight className={`w-4 h-4 ${selectedType === template.type ? 'opacity-100' : 'opacity-0'}`} />
+              <div>
+                <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest block mb-4">Category</label>
+                <div className="space-y-2">
+                  {STORYLINE_TEMPLATES.map((t) => (
+                    <button key={t.type} onClick={() => setSelectedType(t.type)} className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold border transition-all ${selectedType === t.type ? 'bg-purple-600 border-purple-500 text-white' : 'bg-gray-900 border-gray-700 text-gray-400'}`}>
+                      {t.type} <ChevronRight className="w-4 h-4" />
                     </button>
                   ))}
                 </div>
               </div>
-
-              <div className="space-y-4 pt-4 border-t border-gray-700">
-                <label className="text-gray-400 text-xs font-black uppercase tracking-widest pl-1">Creativity Style</label>
+              <div className="pt-4 border-t border-gray-700 space-y-4">
+                <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest block">Mode</label>
                 <div className="flex gap-2">
-                  {(['Classic', 'Fresh'] as const).map(pref => (
-                    <button
-                      key={pref}
-                      onClick={() => setTemplatePreference(pref)}
-                      className={`flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all border ${templatePreference === pref
-                        ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg ring-2 ring-indigo-500/20'
-                        : 'bg-gray-900 border-gray-800 text-gray-500 hover:text-gray-300'}`}
-                    >
-                      {pref}
-                    </button>
-                  ))}
+                  <button onClick={() => setRoadmapData({ ...roadmapData, useAI: false })} className={`flex-1 py-3 rounded-xl text-[10px] font-black border ${!roadmapData.useAI ? 'bg-purple-600 text-white' : 'bg-gray-900 text-gray-500'}`}>Classic</button>
+                  <button onClick={() => setRoadmapData({ ...roadmapData, useAI: true })} className={`flex-1 py-3 rounded-xl text-[10px] font-black border ${roadmapData.useAI ? 'bg-indigo-600 text-white' : 'bg-gray-900 text-gray-500'}`}>Gemini AI</button>
                 </div>
               </div>
-
-              <button
-                onClick={generateStoryline}
-                disabled={selectedWrestlers.length === 0}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-black uppercase tracking-widest hover:from-purple-500 hover:to-pink-500 transition-all shadow-xl disabled:opacity-30 active:scale-95 mt-4"
-              >
-                <RefreshCw className="w-5 h-5" />
-                Produce Script
+              <div className="pt-4 border-t border-gray-700 space-y-4">
+                <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest block">Director's Note</label>
+                <textarea placeholder="e.g. He thinks he's a king..." value={customContext} onChange={(e) => setCustomContext(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-xs text-white focus:ring-2 focus:ring-purple-600 outline-none min-h-[80px]" />
+              </div>
+              <button onClick={generateStoryline} disabled={isGeneratingAI || selectedWrestlers.length === 0} className="w-full flex items-center justify-center gap-2 py-4 bg-purple-600 text-white rounded-xl font-black uppercase text-sm hover:shadow-xl active:scale-95 disabled:opacity-30">
+                {isGeneratingAI ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Produce Script'}
               </button>
             </div>
           </div>
-
           <div className="lg:col-span-2">
             <div className="bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 shadow-xl h-full">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+              <div className="flex items-center justify-between mb-6">
                 <div>
-                  <label className="text-gray-400 text-xs font-black uppercase tracking-widest pl-1 block">Superstar Selection ({selectedWrestlers.length})</label>
+                  <label className="text-gray-400 text-[10px] font-black uppercase block">Superstars ({selectedWrestlers.length})</label>
                   {selectedWrestlers.length === 1 && (
-                    <div className="flex gap-4 mt-2 animate-in slide-in-from-left-2">
-                      <button
-                        onClick={() => suggestRival('Fresh')}
-                        className="flex items-center gap-1.5 text-[10px] font-black text-blue-400 uppercase tracking-widest hover:text-white transition-colors border border-blue-500/30 px-2 py-1 rounded bg-blue-500/5 shadow-sm"
-                      >
-                        <Zap className="w-3 h-3" /> Fresh Rival
-                      </button>
-                      <button
-                        onClick={() => suggestRival('Certain')}
-                        className="flex items-center gap-1.5 text-[10px] font-black text-yellow-400 uppercase tracking-widest hover:text-white transition-colors border border-yellow-500/30 px-2 py-1 rounded bg-yellow-500/5 shadow-sm"
-                      >
-                        <TrendingUp className="w-3 h-3" /> Certain (Top) Rival
-                      </button>
+                    <div className="flex gap-2 mt-2">
+                      <button onClick={() => suggestRival('Fresh')} className="text-[10px] font-black text-blue-400 uppercase border border-blue-500/30 px-2 py-1 rounded bg-blue-500/5">Fresh Rival</button>
+                      <button onClick={() => suggestRival('Certain')} className="text-[10px] font-black text-yellow-400 uppercase border border-yellow-500/30 px-2 py-1 rounded bg-yellow-500/5">Top Rival</button>
                     </div>
                   )}
                 </div>
-                <div className="relative w-full sm:w-auto">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <input
-                    type="text"
-                    placeholder="Search talent..."
-                    className="w-full sm:w-64 bg-gray-900 border border-gray-700 rounded-xl py-2 pl-9 pr-4 text-xs text-white outline-none focus:ring-1 focus:ring-purple-500 shadow-inner"
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    maxLength={50}
-                  />
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500" />
+                  <input type="text" placeholder="Search..." className="w-48 bg-gray-900 border border-gray-700 rounded-xl py-2 pl-8 text-xs text-white outline-none focus:ring-1 focus:ring-purple-500" onChange={(e) => setSearchTerm(e.target.value)} />
                 </div>
               </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
-                {filteredWrestlers.map((wrestler) => (
-                  <WrestlerSelectButton
-                    key={wrestler.id}
-                    wrestler={wrestler}
-                    isSelected={selectedWrestlers.includes(wrestler.id)}
-                    onToggle={toggleWrestlerSelection}
-                  />
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                {filteredWrestlers.map((w) => <WrestlerSelectButton key={w.id} wrestler={w} isSelected={selectedWrestlers.includes(w.id)} onToggle={toggleWrestlerSelection} />)}
               </div>
             </div>
           </div>
         </div>
       ) : (
         loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-          </div>
+          <div className="flex justify-center py-20"><RefreshCw className="w-10 h-10 animate-spin text-purple-600" /></div>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {storylines.length === 0 ? (
-              <div className="xl:col-span-2 text-center py-40 bg-gray-800/10 rounded-[3rem] border border-gray-700/50 border-dashed">
-                <Sparkles className="w-20 h-20 text-gray-800 mx-auto mb-6 opacity-30" />
-                <h3 className="text-2xl font-black text-white uppercase tracking-widest">Script Vault Empty</h3>
-                <p className="text-gray-500 mt-2 font-medium bg-gray-900/50 px-4 py-1 rounded-full inline-block">Draft a masterpiece to begin your legacy</p>
-              </div>
+              <div className="col-span-full text-center py-40 text-gray-500 uppercase font-black tracking-widest">Vault Empty</div>
             ) : (
-              storylines.map((storyline) => (
-                <StorylineCard
-                  key={storyline.id}
-                  storyline={storyline}
-                  wrestlers={wrestlers}
-                  onDelete={handleDelete}
-                  onToggleFavorite={toggleFavorite}
-                  getTypeColor={getTypeColor}
-                />
-              ))
+              storylines.map((s) => <StorylineCard key={s.id} storyline={s} wrestlers={wrestlers} onDelete={handleDelete} onToggleFavorite={toggleFavorite} getTypeColor={getTypeColor} />)
             )}
           </div>
         )
@@ -1107,127 +516,58 @@ export function StorylineGenerator() {
   );
 }
 
-interface StorylineCardProps {
-  storyline: Storyline;
-  wrestlers: Wrestler[];
-  onDelete: (id: string) => void;
-  onToggleFavorite: (id: string) => void;
-  getTypeColor: (type: string) => string;
-}
-
-const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, getTypeColor }: StorylineCardProps) => {
-  const participants = (storyline.participants as string[]).map((id: string) => wrestlers.find((w: Wrestler) => w.id === id)).filter((w): w is Wrestler => !!w);
-
+const ParticipantAvatar = ({ wrestler }: { wrestler: Wrestler }) => {
+  const [imageError, setImageError] = useState(false);
   return (
-    <div className={`group relative bg-gray-800/40 backdrop-blur-sm border rounded-[2rem] p-8 hover:border-purple-500/50 transition-all flex flex-col h-full shadow-2xl ${storyline.type === 'Fresh Feud' ? 'border-indigo-500/30' : 'border-gray-700/50'}`}>
-      <div className="flex items-start justify-between mb-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className={`text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg border shadow-sm ${getTypeColor(storyline.type)}`}>
-              {storyline.type}
-            </span>
-            {storyline.favorited && (
-              <div className="p-1 px-2 bg-yellow-500/10 rounded-lg flex items-center gap-1 border border-yellow-500/20">
-                <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                <span className="text-[8px] font-black text-yellow-500 uppercase font-mono">Archive</span>
-              </div>
-            )}
-          </div>
-          <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter leading-none transition-colors">{storyline.title}</h3>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => onToggleFavorite(storyline.id)} className="p-3 bg-gray-950 border border-gray-700 rounded-2xl hover:text-yellow-400 transition-all shadow-lg active:scale-90">
-            <Star className={`w-4 h-4 ${storyline.favorited ? 'fill-current text-yellow-500' : ''}`} />
-          </button>
-          <button onClick={() => onDelete(storyline.id)} className="p-3 bg-gray-950 border border-gray-700 rounded-2xl hover:text-red-500 transition-all shadow-lg active:scale-90">
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-8">
-        <p className="text-gray-400 text-sm italic font-medium border-l-2 border-indigo-500/50 pl-4 py-1">"{storyline.description}"</p>
-      </div>
-
-      {participants.length > 0 && (
-        <div className="flex items-center gap-3 mb-8">
-          <div className="flex -space-x-3 overflow-hidden">
-            {participants.map((p: Wrestler) => (
-              <div key={p.id} className="relative w-12 h-12 rounded-2xl border-4 border-gray-950 bg-gray-900 shadow-xl overflow-hidden group/thumb" title={p.name}>
-                {p.image_url ? (
-                  <img
-                    src={p.image_url}
-                    alt={p.name}
-                    className="w-full h-full object-cover group-hover/thumb:scale-110 transition-all"
-                    loading="lazy"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
-                        target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                      }
-                    }}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-800">{p.name[0]}</div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="h-4 w-px bg-gray-800" />
-          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{participants.length} Cast Members</p>
+    <div className="relative w-12 h-12 rounded-2xl border-4 border-gray-950 bg-gray-900 shadow-xl overflow-hidden" title={wrestler.name}>
+      {wrestler.image_url && !imageError ? (
+        <img src={wrestler.image_url} alt={wrestler.name} className="w-full h-full object-cover" onError={() => setImageError(true)} />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-gray-800 p-1">
+          <span className="text-[10px] font-black text-gray-400 uppercase">{wrestler.name.split(' ').map(n => n[0]).join('')}</span>
         </div>
       )}
+    </div>
+  );
+};
 
-      <div className="space-y-6 mt-auto">
-        <div className="bg-gray-950/50 rounded-3xl p-6 border border-gray-800 shadow-inner">
-          <h4 className="flex items-center gap-2 text-[10px] font-black text-purple-500 uppercase tracking-[0.2em] mb-4">
-            <Zap className="w-4 h-4 text-purple-500" /> Booking Strategy
-          </h4>
-          <div className="space-y-4">
-            {(storyline.execution_steps as string[]).map((step: string, i: number) => (
-              <div key={i} className="flex gap-4 items-start group">
-                <span className="text-sm font-black text-gray-700 italic group-hover:text-purple-500 transition-colors">{(i + 1).toString().padStart(2, '0')}</span>
-                <p className="text-xs text-gray-300 leading-relaxed font-medium">{step}</p>
+const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, getTypeColor }: any) => {
+  const participants = (storyline.participants as string[]).map(id => wrestlers.find(w => w.id === id)).filter((w): w is Wrestler => !!w);
+  return (
+    <div className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-[2rem] p-8 flex flex-col h-full shadow-2xl">
+      <div className="flex justify-between mb-6">
+        <div className="space-y-2">
+          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border ${getTypeColor(storyline.type)}`}>{storyline.type}</span>
+          <h3 className="text-xl font-black text-white uppercase italic">{storyline.title}</h3>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => onToggleFavorite(storyline.id)} className={`p-3 bg-gray-950 border border-gray-700 rounded-2xl active:scale-90 ${storyline.favorited ? 'text-yellow-500' : 'text-gray-500'}`}><Star className="w-4 h-4 fill-current" /></button>
+          <button onClick={() => onDelete(storyline.id)} className="p-3 bg-gray-950 border border-gray-700 rounded-2xl text-red-500 active:scale-90"><Trash2 className="w-4 h-4" /></button>
+        </div>
+      </div>
+      <p className="text-gray-400 text-sm italic mb-8 border-l-2 border-purple-500/50 pl-4">"{storyline.description}"</p>
+      {participants.length > 0 && (
+        <div className="flex items-center gap-3 mb-8">
+          <div className="flex -space-x-3">{participants.map(p => <ParticipantAvatar key={p.id} wrestler={p} />)}</div>
+          <p className="text-[10px] font-black text-gray-500 uppercase">{participants.length} Cast Members</p>
+        </div>
+      )}
+      <div className="space-y-4 mt-auto">
+        <div className="bg-gray-950/50 rounded-2xl p-4 border border-gray-800">
+          <h4 className="text-[10px] font-black text-purple-500 uppercase mb-3">Booking Strategy</h4>
+          <div className="space-y-2">
+            {storyline.execution_steps.map((step: string, i: number) => (
+              <div key={i} className="flex gap-3 text-xs">
+                <span className="font-black text-gray-700">{(i + 1).toString().padStart(2, '0')}</span>
+                <p className="text-gray-300">{step}</p>
               </div>
             ))}
           </div>
         </div>
-
-        {(storyline.promos || storyline.key_lines) && (
-          <div className="bg-gray-900/60 rounded-3xl p-6 border border-gray-800 space-y-6 shadow-sm">
-            {storyline.promos && (storyline.promos as string[]).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="flex items-center gap-2 text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">
-                  <MessageSquare className="w-4 h-4" /> Script Beats
-                </h4>
-                <ul className="space-y-2">
-                  {(storyline.promos as string[]).map((promo: string, i: number) => (
-                    <li key={i} className="text-[11px] text-gray-400 italic flex gap-3">
-                      <span className="text-blue-500/50 font-black">•</span>
-                      <span>{promo}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {storyline.key_lines && (storyline.key_lines as string[]).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="flex items-center gap-2 text-[10px] font-black text-yellow-500 uppercase tracking-[0.2em]">
-                  <Sparkles className="w-4 h-4" /> Dialogue Hits
-                </h4>
-                <div className="grid grid-cols-1 gap-2">
-                  {(storyline.key_lines as string[]).map((line: string, i: number) => (
-                    <div key={i} className="relative group/line">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-transparent rounded-xl opacity-0 group-hover/line:opacity-100 transition-opacity" />
-                      <p className="relative text-[11px] text-white font-black italic bg-gray-950 p-3 rounded-xl border border-gray-800 border-l-yellow-500/80 leading-relaxed shadow-sm">
-                        "{line}"
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+        {storyline.promos && storyline.promos.length > 0 && (
+          <div className="bg-gray-900/60 rounded-2xl p-4 border border-gray-800">
+            <h4 className="text-[10px] font-black text-blue-400 uppercase mb-3">Script Beats</h4>
+            <ul className="space-y-1">{storyline.promos.map((p: string, i: number) => <li key={i} className="text-[11px] text-gray-400 italic">• {p}</li>)}</ul>
           </div>
         )}
       </div>

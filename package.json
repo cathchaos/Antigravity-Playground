@@ -12,7 +12,6 @@
     "update-roster": "node scripts/update_roster.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.57.4",
     "cheerio": "^1.2.0",
     "lucide-react": "^0.344.0",
     "node-fetch": "^2.7.0",

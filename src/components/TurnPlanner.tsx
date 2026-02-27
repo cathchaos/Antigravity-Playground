@@ -1,10 +1,28 @@
 import { useState, useMemo, useEffect } from 'react';
-import { RefreshCcw, AlertCircle, ChevronRight, UserCheck, ShieldOff, BrainCircuit, Target, MessageSquare } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { Database } from '../lib/database.types';
+import { RefreshCcw, AlertCircle, ChevronRight, ShieldOff, BrainCircuit, Target, MessageSquare } from 'lucide-react';
+import rosterData from '../data/roster.json';
 
-type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
-type StorylineInsert = Database['public']['Tables']['storylines']['Insert'];
+interface Wrestler {
+  id: string;
+  name: string;
+  brand: string;
+  alignment: string;
+  status: string;
+  image_url?: string | null;
+}
+
+interface Storyline {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  participants: string[];
+  execution_steps: string[];
+  promos?: string[];
+  key_lines?: string[];
+  created_at: string;
+  favorited: boolean;
+}
 
 interface TurnMethod {
   name: string;
@@ -101,6 +119,13 @@ export function TurnPlanner() {
   const [selectedMethodName, setSelectedMethodName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [customContext, setCustomContext] = useState('');
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    // Reset image error when selection changes
+    setImageError(false);
+  }, [selectedWrestlerId]);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
@@ -108,21 +133,12 @@ export function TurnPlanner() {
   }, [searchTerm]);
 
   useEffect(() => {
-    fetchWrestlers();
+    // Load Roster
+    const savedRoster = localStorage.getItem('wwe_roster');
+    const actualRoster = savedRoster ? JSON.parse(savedRoster) : rosterData;
+    setWrestlers(actualRoster);
+    setLoading(false);
   }, []);
-
-  async function fetchWrestlers() {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.from('wrestlers').select('*').order('name');
-      if (error) throw error;
-      setWrestlers(data || []);
-    } catch (error) {
-      console.error('Error fetching wrestlers for turn planner:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const selectedWrestler = useMemo(() =>
     wrestlers.find(w => w.id === selectedWrestlerId),
@@ -137,37 +153,39 @@ export function TurnPlanner() {
     return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [wrestlers, debouncedSearch]);
 
-  async function executeTurn() {
+  function executeTurn() {
     if (!selectedWrestler || !selectedMethod) return;
 
     const storylineTitle = `${turnType === 'heel' ? 'Heel' : 'Face'} Turn: ${selectedWrestler.name}`;
-    const storylineDescription = `${selectedWrestler.name} undergoes a major character shift via ${selectedMethod.name}: ${selectedMethod.description}`;
+    let storylineDescription = `${selectedWrestler.name} undergoes a major character shift via ${selectedMethod.name}: ${selectedMethod.description}`;
 
-    try {
-      const { error } = await supabase
-        .from('storylines')
-        .insert([{
-          title: storylineTitle,
-          description: storylineDescription,
-          type: turnType === 'heel' ? 'Heel Turn' : 'Face Turn',
-          participants: [selectedWrestler.id],
-          execution_steps: selectedMethod.steps,
-          promos: selectedMethod.promos,
-          key_lines: selectedMethod.key_lines,
-          created_at: new Date().toISOString(),
-          favorited: false,
-        } as StorylineInsert]);
-
-      if (error) throw error;
-
-      alert(`${selectedWrestler.name} is now scheduled for a ${turnType} turn. The execution plan has been saved to your Storylines!`);
-
-      setSelectedWrestlerId(null);
-      setSelectedMethodName(null);
-    } catch (error) {
-      console.error('Error executing turn:', error);
-      alert('Error saving turn. Check permissions.');
+    if (customContext.trim()) {
+      storylineDescription += ` [Director's Note: ${customContext}]`;
     }
+
+    const newStoryline: Storyline = {
+      id: crypto.randomUUID(),
+      title: storylineTitle,
+      description: storylineDescription,
+      type: turnType === 'heel' ? 'Heel Turn' : 'Face Turn',
+      participants: [selectedWrestler.id],
+      execution_steps: selectedMethod.steps,
+      promos: selectedMethod.promos,
+      key_lines: selectedMethod.key_lines,
+      created_at: new Date().toISOString(),
+      favorited: false,
+    };
+
+    // Save to storylines
+    const savedStorylines = localStorage.getItem('wwe_storylines');
+    const storylines = savedStorylines ? JSON.parse(savedStorylines) : [];
+    localStorage.setItem('wwe_storylines', JSON.stringify([newStoryline, ...storylines]));
+
+    alert(`${selectedWrestler.name} is now scheduled for a ${turnType} turn. The execution plan has been saved to your Storylines!`);
+
+    setSelectedWrestlerId(null);
+    setSelectedMethodName(null);
+    setCustomContext('');
   }
 
   return (
@@ -292,18 +310,20 @@ export function TurnPlanner() {
             <div className="bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-green-500/30 p-8 space-y-8 animate-in slide-in-from-right-4 duration-500 h-full flex flex-col shadow-2xl">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gray-950 border-2 border-green-500/20 shadow-xl">
-                  {selectedWrestler.image_url ? (
+                  {selectedWrestler.image_url && !imageError ? (
                     <img
                       src={selectedWrestler.image_url}
                       alt={selectedWrestler.name}
                       className="w-full h-full object-cover"
                       loading="lazy"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                      }}
+                      onError={() => setImageError(true)}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-900"><UserCheck className="w-6 h-6 text-green-500" /></div>
+                    <div className="w-full h-full flex items-center justify-center bg-gray-900 p-2 text-center">
+                      <span className="text-[10px] font-black text-green-500 uppercase tracking-tighter leading-none">
+                        {selectedWrestler.name}
+                      </span>
+                    </div>
                   )}
                 </div>
                 <div>
@@ -330,6 +350,15 @@ export function TurnPlanner() {
                 </div>
 
                 <div className="bg-gray-900/40 rounded-2xl p-6 border border-gray-800/50 space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-gray-600 text-[10px] font-black uppercase tracking-[0.3em] block">Director's Note / Gimmick Focus</label>
+                    <textarea
+                      placeholder="e.g. He's doing this to protect his legacy, or he's obsessed with a specific rival..."
+                      value={customContext}
+                      onChange={(e) => setCustomContext(e.target.value)}
+                      className="w-full bg-gray-950 border border-gray-800 rounded-xl py-3 px-4 text-xs text-white focus:ring-2 focus:ring-green-500 outline-none shadow-inner min-h-[60px]"
+                    />
+                  </div>
                   <div>
                     <h4 className="flex items-center gap-2 text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3">
                       <MessageSquare className="w-3 h-3" /> Narrative Beats

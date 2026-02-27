@@ -1,10 +1,26 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Zap, Plus, Trash2, Flame, Search, Lightbulb } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { Database } from '../lib/database.types';
+import rosterData from '../data/roster.json';
 
-type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
-type Feud = Database['public']['Tables']['feuds']['Row'];
+interface Wrestler {
+  id: string;
+  name: string;
+  brand: string;
+  alignment: string;
+  status: string;
+  title?: string | null;
+  image_url?: string | null;
+}
+
+interface Feud {
+  id: string;
+  wrestler1_id: string;
+  wrestler2_id: string;
+  description: string;
+  intensity: 'Low' | 'Medium' | 'High';
+  status: 'Active' | 'On Hold' | 'Resolved';
+  created_at: string;
+}
 
 const FRESH_IDEAS = [
   { title: "The Algorithm", desc: "A tech-savvy heel uses AI and data analytics to predict their opponent's every move. Success Probability charts included." },
@@ -24,6 +40,35 @@ const FRESH_IDEAS = [
   { title: "Career Simulation", desc: "Cocky heel treats matches like a video game, complaining about 'button lag' and treating faces like NPCs." }
 ];
 
+const FeudWrestler = ({ wrestler, alignment, isRight }: { wrestler?: Wrestler, alignment: string, isRight?: boolean }) => {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <div className={`relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden ${isRight ? 'text-right' : ''}`}>
+      {wrestler?.image_url && !imageError ? (
+        <img
+          src={wrestler.image_url}
+          alt={wrestler.name}
+          className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
+          loading="lazy"
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-gray-950 px-4 text-center">
+          <span className="text-4xl font-black text-gray-800 uppercase tracking-tighter opacity-30 select-none">
+            {wrestler?.name}
+          </span>
+        </div>
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent pointer-events-none" />
+      <div className={`absolute bottom-6 ${isRight ? 'right-6' : 'left-6'} right-6`}>
+        <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{alignment}</span>
+        <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{wrestler?.name || 'Unknown'}</h4>
+      </div>
+    </div>
+  );
+};
+
 export function FeudTracker() {
   const [feuds, setFeuds] = useState<Feud[]>([]);
   const [wrestlers, setWrestlers] = useState<Wrestler[]>([]);
@@ -37,28 +82,23 @@ export function FeudTracker() {
   }, [searchTerm]);
 
   useEffect(() => {
-    fetchData();
+    // Load Roster
+    const savedRoster = localStorage.getItem('wwe_roster');
+    const actualRoster = savedRoster ? JSON.parse(savedRoster) : rosterData;
+    setWrestlers(actualRoster);
+
+    // Load Feuds
+    const savedFeuds = localStorage.getItem('wwe_feuds');
+    if (savedFeuds) {
+      setFeuds(JSON.parse(savedFeuds));
+    }
+    setLoading(false);
   }, []);
 
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const [wrestlersRes, feudsRes] = await Promise.all([
-        supabase.from('wrestlers').select('*').order('name'),
-        supabase.from('feuds').select('*').order('created_at', { ascending: false })
-      ]);
-
-      if (wrestlersRes.error) throw wrestlersRes.error;
-      if (feudsRes.error) throw feudsRes.error;
-
-      setWrestlers(wrestlersRes.data || []);
-      setFeuds(feudsRes.data || []);
-    } catch (error) {
-      console.error('Error fetching feuds data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const saveFeuds = (newFeuds: Feud[]) => {
+    setFeuds(newFeuds);
+    localStorage.setItem('wwe_feuds', JSON.stringify(newFeuds));
+  };
 
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
@@ -105,7 +145,7 @@ export function FeudTracker() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!formData.wrestler1_id || !formData.wrestler2_id) return;
     if (formData.wrestler1_id === formData.wrestler2_id) {
@@ -113,42 +153,19 @@ export function FeudTracker() {
       return;
     }
 
-    try {
-      const { error } = await supabase
-        .from('feuds')
-        .insert([{
-          wrestler1_id: formData.wrestler1_id,
-          wrestler2_id: formData.wrestler2_id,
-          description: formData.description,
-          intensity: formData.intensity,
-          status: formData.status,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }]);
+    const newFeud: Feud = {
+      id: crypto.randomUUID(),
+      ...formData,
+      created_at: new Date().toISOString()
+    };
 
-      if (error) throw error;
-      fetchData();
-      resetForm();
-    } catch (error) {
-      console.error('Error creating feud:', error);
-      alert('Error creating feud. Check permissions.');
-    }
+    saveFeuds([newFeud, ...feuds]);
+    resetForm();
   }
 
-  async function handleDelete(id: string) {
+  function handleDelete(id: string) {
     if (confirm('Are you sure you want to end this rivalry?')) {
-      try {
-        const { error } = await supabase
-          .from('feuds')
-          .delete()
-          .eq('id', id);
-
-        if (error) throw error;
-        setFeuds(feuds.filter(f => f.id !== id));
-      } catch (error) {
-        console.error('Error deleting feud:', error);
-        alert('Error ending rivalry. Check permissions.');
-      }
+      saveFeuds(feuds.filter(f => f.id !== id));
     }
   }
 
@@ -357,30 +374,7 @@ export function FeudTracker() {
                 className="group relative bg-gray-800/20 backdrop-blur-md border border-gray-700/50 rounded-[2.5rem] overflow-hidden hover:border-yellow-500/50 transition-all shadow-2xl"
               >
                 <div className="flex flex-col sm:flex-row h-full">
-                  {/* Wrestler 1 */}
-                  <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
-                    {w1?.image_url ? (
-                      <img
-                        src={w1.image_url}
-                        alt={w1.name}
-                        className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
-                        loading="lazy"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
-                            target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                          }
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6">
-                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${w1?.alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{w1?.alignment}</span>
-                      <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{w1?.name || 'Unknown'}</h4>
-                    </div>
-                  </div>
+                  <FeudWrestler wrestler={w1} alignment={w1?.alignment || 'Face'} />
 
                   {/* VS Divider */}
                   <div className="relative flex items-center justify-center bg-gray-800 border-x border-gray-700 w-full sm:w-20 h-16 sm:h-auto z-10 shadow-2xl">
@@ -388,30 +382,7 @@ export function FeudTracker() {
                     <span className="text-2xl font-black text-yellow-500 italic z-20 drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">VS</span>
                   </div>
 
-                  {/* Wrestler 2 */}
-                  <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
-                    {w2?.image_url ? (
-                      <img
-                        src={w2.image_url}
-                        alt={w2.name}
-                        className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
-                        loading="lazy"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
-                            target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                          }
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6 text-right">
-                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${w2?.alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{w2?.alignment}</span>
-                      <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{w2?.name || 'Unknown'}</h4>
-                    </div>
-                  </div>
+                  <FeudWrestler wrestler={w2} alignment={w2?.alignment || 'Heel'} isRight />
                 </div>
 
                 {/* Feud Details Overlay (Bottom) */}
