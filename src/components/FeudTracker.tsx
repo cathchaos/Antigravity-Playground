@@ -1,25 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Zap, Plus, Trash2, Flame, Search, Lightbulb } from 'lucide-react';
-import rosterData from '../data/roster.json';
+import { supabase } from '../lib/supabase';
+import { Database } from '../lib/database.types';
 
-interface Wrestler {
-  id: string;
-  name: string;
-  brand: string;
-  alignment: string;
-  image_url?: string;
-  title?: string;
-}
-
-interface Feud {
-  id: string;
-  wrestler1_id: string;
-  wrestler2_id: string;
-  description: string;
-  intensity: 'Low' | 'Medium' | 'High';
-  status: 'Active' | 'On Hold' | 'Resolved';
-  created_at: string;
-}
+type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
+type Feud = Database['public']['Tables']['feuds']['Row'];
 
 const FRESH_IDEAS = [
   { title: "The Algorithm", desc: "A tech-savvy heel uses AI and data analytics to predict their opponent's every move. Success Probability charts included." },
@@ -40,10 +25,9 @@ const FRESH_IDEAS = [
 ];
 
 export function FeudTracker() {
-  const [feuds, setFeuds] = useState<Feud[]>(() => {
-    const saved = localStorage.getItem('wwe_feuds');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [feuds, setFeuds] = useState<Feud[]>([]);
+  const [wrestlers, setWrestlers] = useState<Wrestler[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
@@ -51,6 +35,30 @@ export function FeudTracker() {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
     return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const [wrestlersRes, feudsRes] = await Promise.all([
+        supabase.from('wrestlers').select('*').order('name'),
+        supabase.from('feuds').select('*').order('created_at', { ascending: false })
+      ]);
+
+      if (wrestlersRes.error) throw wrestlersRes.error;
+      if (feudsRes.error) throw feudsRes.error;
+
+      setWrestlers(wrestlersRes.data || []);
+      setFeuds(feudsRes.data || []);
+    } catch (error) {
+      console.error('Error fetching feuds data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
@@ -61,16 +69,9 @@ export function FeudTracker() {
     status: 'Active' as 'Active' | 'On Hold' | 'Resolved',
   });
 
-  const wrestlers = rosterData as Wrestler[];
-
   const filteredWrestlers = useMemo(() => {
     return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [wrestlers, debouncedSearch]);
-
-  const saveFeuds = (newFeuds: Feud[]) => {
-    setFeuds(newFeuds);
-    localStorage.setItem('wwe_feuds', JSON.stringify(newFeuds));
-  };
 
   function getInspiration() {
     const idea = FRESH_IDEAS[Math.floor(Math.random() * FRESH_IDEAS.length)];
@@ -112,19 +113,42 @@ export function FeudTracker() {
       return;
     }
 
-    const newFeud: Feud = {
-      ...formData,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString(),
-    };
+    try {
+      const { error } = await supabase
+        .from('feuds')
+        .insert([{
+          wrestler1_id: formData.wrestler1_id,
+          wrestler2_id: formData.wrestler2_id,
+          description: formData.description,
+          intensity: formData.intensity,
+          status: formData.status,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }]);
 
-    saveFeuds([newFeud, ...feuds]);
-    resetForm();
+      if (error) throw error;
+      fetchData();
+      resetForm();
+    } catch (error) {
+      console.error('Error creating feud:', error);
+      alert('Error creating feud. Check permissions.');
+    }
   }
 
   async function handleDelete(id: string) {
     if (confirm('Are you sure you want to end this rivalry?')) {
-      saveFeuds(feuds.filter(f => f.id !== id));
+      try {
+        const { error } = await supabase
+          .from('feuds')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        setFeuds(feuds.filter(f => f.id !== id));
+      } catch (error) {
+        console.error('Error deleting feud:', error);
+        alert('Error ending rivalry. Check permissions.');
+      }
     }
   }
 
@@ -187,6 +211,7 @@ export function FeudTracker() {
                   <input
                     type="text"
                     placeholder="Search..."
+                    aria-label="Search Superstars for slot Alpha"
                     className="w-full bg-gray-900 border border-gray-700 rounded-xl py-2 pl-9 pr-4 text-xs text-white focus:ring-1 focus:ring-yellow-500 outline-none shadow-inner"
                     onChange={(e) => setSearchTerm(e.target.value)}
                     maxLength={50}
@@ -195,6 +220,7 @@ export function FeudTracker() {
                 <select
                   value={formData.wrestler1_id}
                   onChange={(e) => setFormData({ ...formData, wrestler1_id: e.target.value })}
+                  aria-label="Select Superstar Alpha"
                   className="w-full bg-gray-900 border border-gray-700 rounded-2xl py-4 px-4 text-sm text-white focus:ring-2 focus:ring-yellow-500 outline-none"
                   required
                 >
@@ -220,6 +246,7 @@ export function FeudTracker() {
                   <input
                     type="text"
                     placeholder="Search..."
+                    aria-label="Search Superstars for slot Beta"
                     className="w-full bg-gray-900 border border-gray-700 rounded-xl py-2 pl-9 pr-4 text-xs text-white focus:ring-1 focus:ring-yellow-500 outline-none shadow-inner"
                     onChange={(e) => setSearchTerm(e.target.value)}
                     maxLength={50}
@@ -228,6 +255,7 @@ export function FeudTracker() {
                 <select
                   value={formData.wrestler2_id}
                   onChange={(e) => setFormData({ ...formData, wrestler2_id: e.target.value })}
+                  aria-label="Select Superstar Beta"
                   className="w-full bg-gray-900 border border-gray-700 rounded-2xl py-4 px-4 text-sm text-white focus:ring-2 focus:ring-yellow-500 outline-none"
                   required
                 >
@@ -260,8 +288,9 @@ export function FeudTracker() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Conflict Status</label>
+                <label htmlFor="conflict-status" className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Conflict Status</label>
                 <select
+                  id="conflict-status"
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value as 'Active' | 'On Hold' | 'Resolved' })}
                   className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-sm text-white focus:ring-2 focus:ring-yellow-500 outline-none shadow-sm"
@@ -312,6 +341,11 @@ export function FeudTracker() {
         </form>
       )}
 
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {feuds.map((feud) => {
           const w1 = wrestlers.find(w => w.id === feud.wrestler1_id);
@@ -406,8 +440,9 @@ export function FeudTracker() {
           );
         })}
       </div>
+      )}
 
-      {feuds.length === 0 && (
+      {!loading && feuds.length === 0 && (
         <div className="text-center py-48 bg-gray-800/10 rounded-[3rem] border border-gray-700/50 border-dashed">
           <div className="inline-block p-6 bg-gray-900/50 rounded-full mb-8">
             <Zap className="w-20 h-20 text-gray-800 opacity-20" />

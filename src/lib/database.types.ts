@@ -18,6 +18,7 @@ export interface Database {
           status: string
           title: string | null
           bio: string | null
+          image_url: string | null
           created_at: string
           updated_at: string
         }
@@ -29,6 +30,7 @@ export interface Database {
           status?: string
           title?: string | null
           bio?: string | null
+          image_url?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -40,6 +42,7 @@ export interface Database {
           status?: string
           title?: string | null
           bio?: string | null
+          image_url?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -87,6 +90,8 @@ export interface Database {
           type: string
           participants: Json
           execution_steps: Json
+          promos: Json
+          key_lines: Json
           created_at: string
           favorited: boolean
         }
@@ -97,6 +102,8 @@ export interface Database {
           type: string
           participants?: Json
           execution_steps?: Json
+          promos?: Json
+          key_lines?: Json
           created_at?: string
           favorited?: boolean
         }
@@ -107,6 +114,8 @@ export interface Database {
           type?: string
           participants?: Json
           execution_steps?: Json
+          promos?: Json
+          key_lines?: Json
           created_at?: string
           favorited?: boolean
         }

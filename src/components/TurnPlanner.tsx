@@ -1,14 +1,9 @@
 import { useState, useMemo, useEffect } from 'react';
-import { RefreshCcw, AlertCircle, ChevronRight, MessageSquare, UserCheck, ShieldOff, BrainCircuit, Target } from 'lucide-react';
-import rosterData from '../data/roster.json';
+import { RefreshCcw, AlertCircle, ChevronRight, UserCheck, ShieldOff, BrainCircuit, Target, MessageSquare } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { Database } from '../lib/database.types';
 
-interface Wrestler {
-  id: string;
-  name: string;
-  brand: string;
-  alignment: string;
-  image_url?: string;
-}
+type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
 
 interface TurnMethod {
   name: string;
@@ -99,6 +94,8 @@ const FACE_TURN_METHODS: TurnMethod[] = [
 ];
 
 export function TurnPlanner() {
+  const [wrestlers, setWrestlers] = useState<Wrestler[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedWrestlerId, setSelectedWrestlerId] = useState<string | null>(null);
   const [selectedMethodName, setSelectedMethodName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -109,7 +106,22 @@ export function TurnPlanner() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const wrestlers = rosterData as Wrestler[];
+  useEffect(() => {
+    fetchWrestlers();
+  }, []);
+
+  async function fetchWrestlers() {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.from('wrestlers').select('*').order('name');
+      if (error) throw error;
+      setWrestlers(data || []);
+    } catch (error) {
+      console.error('Error fetching wrestlers for turn planner:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const selectedWrestler = useMemo(() =>
     wrestlers.find(w => w.id === selectedWrestlerId),
@@ -124,33 +136,37 @@ export function TurnPlanner() {
     return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [wrestlers, debouncedSearch]);
 
-  function executeTurn() {
+  async function executeTurn() {
     if (!selectedWrestler || !selectedMethod) return;
-
-    const savedStorylines = JSON.parse(localStorage.getItem('wwe_storylines') || '[]');
 
     const storylineTitle = `${turnType === 'heel' ? 'Heel' : 'Face'} Turn: ${selectedWrestler.name}`;
     const storylineDescription = `${selectedWrestler.name} undergoes a major character shift via ${selectedMethod.name}: ${selectedMethod.description}`;
 
-    const newStoryline = {
-      id: Date.now().toString(),
-      title: storylineTitle,
-      description: storylineDescription,
-      type: turnType === 'heel' ? 'Heel Turn' : 'Face Turn',
-      participants: [selectedWrestler.id],
-      execution_steps: selectedMethod.steps,
-      promos: selectedMethod.promos,
-      key_lines: selectedMethod.key_lines,
-      favorited: false,
-      created_at: new Date().toISOString(),
-    };
+    try {
+      const { error } = await supabase
+        .from('storylines')
+        .insert([{
+          title: storylineTitle,
+          description: storylineDescription,
+          type: turnType === 'heel' ? 'Heel Turn' : 'Face Turn',
+          participants: [selectedWrestler.id],
+          execution_steps: selectedMethod.steps,
+          promos: selectedMethod.promos,
+          key_lines: selectedMethod.key_lines,
+          created_at: new Date().toISOString(),
+          favorited: false,
+        } as any]);
 
-    localStorage.setItem('wwe_storylines', JSON.stringify([newStoryline, ...savedStorylines]));
+      if (error) throw error;
 
-    alert(`${selectedWrestler.name} is now scheduled for a ${turnType} turn. The execution plan has been saved to your Storylines!`);
+      alert(`${selectedWrestler.name} is now scheduled for a ${turnType} turn. The execution plan has been saved to your Storylines!`);
 
-    setSelectedWrestlerId(null);
-    setSelectedMethodName(null);
+      setSelectedWrestlerId(null);
+      setSelectedMethodName(null);
+    } catch (error) {
+      console.error('Error executing turn:', error);
+      alert('Error saving turn. Check permissions.');
+    }
   }
 
   return (
@@ -169,6 +185,12 @@ export function TurnPlanner() {
         {/* Left Column: Wrestler Selection */}
         <div className="lg:col-span-1 bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 space-y-4 shadow-xl">
           <label className="text-gray-400 text-xs font-black uppercase tracking-widest pl-1">Superstar</label>
+          {loading ? (
+             <div className="flex justify-center py-10">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+             </div>
+          ) : (
+          <>
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
@@ -203,6 +225,8 @@ export function TurnPlanner() {
               </button>
             ))}
           </div>
+          </>
+          )}
         </div>
 
         {/* Middle Column: Method Selection */}

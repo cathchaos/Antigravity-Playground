@@ -1,29 +1,10 @@
 import { useState, useMemo, useEffect, memo, useCallback } from 'react';
 import { Sparkles, Star, Trash2, RefreshCw, Search, ChevronRight, Calendar, MessageSquare, Zap, TrendingUp } from 'lucide-react';
-import rosterData from '../data/roster.json';
+import { supabase } from '../lib/supabase';
+import { Database } from '../lib/database.types';
 
-interface Wrestler {
-  id: string;
-  name: string;
-  brand: string;
-  alignment: string;
-  image_url?: string;
-  title?: string;
-}
-
-interface Storyline {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  participants: string[];
-  execution_steps: string[];
-  promos?: string[];
-  key_lines?: string[];
-  favorited: boolean;
-  created_at: string;
-  isFresh?: boolean;
-}
+type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
+type Storyline = Database['public']['Tables']['storylines']['Row'];
 
 interface TemplateDefinition {
   title: string;
@@ -581,10 +562,9 @@ const WrestlerSelectButton = memo(({ wrestler, isSelected, onToggle }: WrestlerS
 ));
 
 export function StorylineGenerator() {
-  const [storylines, setStorylines] = useState<Storyline[]>(() => {
-    const saved = localStorage.getItem('wwe_storylines');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [storylines, setStorylines] = useState<Storyline[]>([]);
+  const [wrestlers, setWrestlers] = useState<Wrestler[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -597,6 +577,30 @@ export function StorylineGenerator() {
     }, 200);
     return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const [wrestlersRes, storylinesRes] = await Promise.all([
+        supabase.from('wrestlers').select('*').order('name'),
+        supabase.from('storylines').select('*').order('created_at', { ascending: false })
+      ]);
+
+      if (wrestlersRes.error) throw wrestlersRes.error;
+      if (storylinesRes.error) throw storylinesRes.error;
+
+      setWrestlers(wrestlersRes.data || []);
+      setStorylines(storylinesRes.data || []);
+    } catch (error) {
+      console.error('Error fetching storylines data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
   const [templatePreference, setTemplatePreference] = useState<'Classic' | 'Fresh'>('Classic');
   const [selectedWrestlers, setSelectedWrestlers] = useState<string[]>([]);
   const [showSaved, setShowSaved] = useState(false);
@@ -612,16 +616,33 @@ export function StorylineGenerator() {
     targetTitle: 'World Heavyweight Championship'
   });
 
-  const wrestlers = rosterData as Wrestler[];
-
   const filteredWrestlers = useMemo(() => {
     return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [wrestlers, debouncedSearch]);
 
-  const saveStorylines = (newStorylines: Storyline[]) => {
-    setStorylines(newStorylines);
-    localStorage.setItem('wwe_storylines', JSON.stringify(newStorylines));
-  };
+  async function saveStoryline(newStoryline: any) {
+    try {
+      const { error } = await supabase
+        .from('storylines')
+        .insert([{
+          title: newStoryline.title!,
+          description: newStoryline.description!,
+          type: newStoryline.type!,
+          participants: newStoryline.participants!,
+          execution_steps: newStoryline.execution_steps!,
+          promos: newStoryline.promos || [],
+          key_lines: newStoryline.key_lines || [],
+          created_at: new Date().toISOString(),
+          favorited: false
+        } as any]);
+
+      if (error) throw error;
+      fetchData();
+    } catch (error) {
+      console.error('Error saving storyline:', error);
+      alert('Error saving storyline. Check permissions.');
+    }
+  }
 
   function suggestRival(type: 'Fresh' | 'Certain') {
     if (selectedWrestlers.length !== 1) return;
@@ -683,8 +704,7 @@ export function StorylineGenerator() {
       customizedTitle = `${randomTemplate.title}: ${names}`;
     }
 
-    const newStoryline: Storyline = {
-      id: Date.now().toString(),
+    const newStoryline = {
       title: customizedTitle,
       description: customizedDescription,
       type: selectedType,
@@ -692,24 +712,21 @@ export function StorylineGenerator() {
       execution_steps: randomTemplate.steps,
       promos: randomTemplate.promos,
       key_lines: randomTemplate.key_lines,
-      isFresh: randomTemplate.isFresh,
-      favorited: false,
-      created_at: new Date().toISOString(),
     };
 
-    saveStorylines([newStoryline, ...storylines]);
+    saveStoryline(newStoryline);
     setShowSaved(true);
     setSelectedWrestlers([]);
   }
 
-  function generateLongTermRoadmap() {
+  async function generateLongTermRoadmap() {
     const champ = wrestlers.find(w => w.id === roadmapData.championId);
     if (!champ) {
       alert('Please select a superstar (champion) first');
       return;
     }
 
-    const newRoadmaps: Storyline[] = [];
+    const newRoadmaps: any[] = [];
     const brandWrestlers = wrestlers.filter(w => w.brand === champ.brand && w.id !== champ.id);
 
     for (let i = 0; i < roadmapData.feudCount; i++) {
@@ -731,7 +748,6 @@ export function StorylineGenerator() {
 
       if (template) {
         newRoadmaps.push({
-          id: (Date.now() + i).toString(),
           title: `[Roadmap] ${champ.name} vs ${opponent.name} (${template.title})`,
           description: `Strategic booking for ${champ.name}'s pursuit/defense of the ${roadmapData.targetTitle} during the ${roadmapData.duration} plan.`,
           type: 'Long-term Roadmap',
@@ -739,25 +755,66 @@ export function StorylineGenerator() {
           execution_steps: template.steps,
           promos: template.promos,
           key_lines: template.key_lines,
-          isFresh: template.isFresh,
-          favorited: false,
-          created_at: new Date().toISOString(),
         });
       }
     }
 
-    saveStorylines([...newRoadmaps, ...storylines]);
-    setShowSaved(true);
-    setShowRoadmapForm(false);
-    alert(`Generated ${roadmapData.feudCount}-phase roadmap for ${champ.name}!`);
+    try {
+      const { error } = await supabase
+        .from('storylines')
+        .insert(newRoadmaps.map(r => ({
+          title: r.title!,
+          description: r.description!,
+          type: r.type!,
+          participants: r.participants!,
+          execution_steps: r.execution_steps!,
+          promos: r.promos || [],
+          key_lines: r.key_lines || [],
+          created_at: new Date().toISOString(),
+          favorited: false
+        } as any)));
+
+      if (error) throw error;
+      fetchData();
+      setShowSaved(true);
+      setShowRoadmapForm(false);
+      alert(`Generated ${roadmapData.feudCount}-phase roadmap for ${champ.name}!`);
+    } catch (error) {
+      console.error('Error saving roadmap:', error);
+      alert('Error saving roadmap. Check permissions.');
+    }
   }
 
-  function handleDelete(id: string) {
-    saveStorylines(storylines.filter(s => s.id !== id));
+  async function handleDelete(id: string) {
+    try {
+      const { error } = await supabase
+        .from('storylines')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      setStorylines(storylines.filter(s => s.id !== id));
+    } catch (error) {
+      console.error('Error deleting storyline:', error);
+      alert('Error deleting script. Check permissions.');
+    }
   }
 
-  function toggleFavorite(id: string) {
-    saveStorylines(storylines.map(s => s.id === id ? { ...s, favorited: !s.favorited } : s));
+  async function toggleFavorite(id: string) {
+    const storyline = storylines.find(s => s.id === id);
+    if (!storyline) return;
+
+    try {
+      const { error } = await supabase
+        .from('storylines')
+        .update({ favorited: !storyline.favorited } as any)
+        .eq('id', id);
+
+      if (error) throw error;
+      setStorylines(storylines.map(s => s.id === id ? { ...s, favorited: !storyline.favorited } : s));
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
   }
 
   const toggleWrestlerSelection = useCallback((id: string) => {
@@ -1018,6 +1075,11 @@ export function StorylineGenerator() {
           </div>
         </div>
       ) : (
+        loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {storylines.length === 0 ? (
             <div className="xl:col-span-2 text-center py-40 bg-gray-800/10 rounded-[3rem] border border-gray-700/50 border-dashed">
@@ -1038,6 +1100,7 @@ export function StorylineGenerator() {
             ))
           )}
         </div>
+        )
       )}
     </div>
   );
@@ -1052,21 +1115,10 @@ interface StorylineCardProps {
 }
 
 const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, getTypeColor }: StorylineCardProps) => {
-  const participants = storyline.participants.map((id: string) => wrestlers.find((w: Wrestler) => w.id === id)).filter((w): w is Wrestler => !!w);
-
-  const getStorylineIcon = () => {
-    if (storyline.isFresh) return <Sparkles className="w-4 h-4 text-indigo-400" />;
-    return <Zap className="w-4 h-4 text-purple-500" />;
-  };
+  const participants = (storyline.participants as string[]).map((id: string) => wrestlers.find((w: Wrestler) => w.id === id)).filter((w): w is Wrestler => !!w);
 
   return (
-    <div className={`group relative bg-gray-800/40 backdrop-blur-sm border rounded-[2rem] p-8 hover:border-purple-500/50 transition-all flex flex-col h-full shadow-2xl ${storyline.isFresh ? 'border-indigo-500/30' : 'border-gray-700/50'}`}>
-      {storyline.isFresh && (
-        <div className="absolute top-4 right-20 bg-indigo-600/20 border border-indigo-500 px-2 py-0.5 rounded-lg">
-          <span className="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Experimental</span>
-        </div>
-      )}
-
+    <div className={`group relative bg-gray-800/40 backdrop-blur-sm border rounded-[2rem] p-8 hover:border-purple-500/50 transition-all flex flex-col h-full shadow-2xl ${storyline.type === 'Fresh Feud' ? 'border-indigo-500/30' : 'border-gray-700/50'}`}>
       <div className="flex items-start justify-between mb-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -1125,10 +1177,10 @@ const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, 
       <div className="space-y-6 mt-auto">
         <div className="bg-gray-950/50 rounded-3xl p-6 border border-gray-800 shadow-inner">
           <h4 className="flex items-center gap-2 text-[10px] font-black text-purple-500 uppercase tracking-[0.2em] mb-4">
-            {getStorylineIcon()} Booking Strategy
+            <Zap className="w-4 h-4 text-purple-500" /> Booking Strategy
           </h4>
           <div className="space-y-4">
-            {storyline.execution_steps.map((step: string, i: number) => (
+            {(storyline.execution_steps as string[]).map((step: string, i: number) => (
               <div key={i} className="flex gap-4 items-start group">
                 <span className="text-sm font-black text-gray-700 italic group-hover:text-purple-500 transition-colors">{(i + 1).toString().padStart(2, '0')}</span>
                 <p className="text-xs text-gray-300 leading-relaxed font-medium">{step}</p>
@@ -1139,13 +1191,13 @@ const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, 
 
         {(storyline.promos || storyline.key_lines) && (
           <div className="bg-gray-900/60 rounded-3xl p-6 border border-gray-800 space-y-6 shadow-sm">
-            {storyline.promos && (
+            {storyline.promos && (storyline.promos as string[]).length > 0 && (
               <div className="space-y-3">
                 <h4 className="flex items-center gap-2 text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">
                   <MessageSquare className="w-4 h-4" /> Script Beats
                 </h4>
                 <ul className="space-y-2">
-                  {storyline.promos.map((promo: string, i: number) => (
+                  {(storyline.promos as string[]).map((promo: string, i: number) => (
                     <li key={i} className="text-[11px] text-gray-400 italic flex gap-3">
                       <span className="text-blue-500/50 font-black">•</span>
                       <span>{promo}</span>
@@ -1155,13 +1207,13 @@ const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, 
               </div>
             )}
 
-            {storyline.key_lines && (
+            {storyline.key_lines && (storyline.key_lines as string[]).length > 0 && (
               <div className="space-y-3">
                 <h4 className="flex items-center gap-2 text-[10px] font-black text-yellow-500 uppercase tracking-[0.2em]">
                   <Sparkles className="w-4 h-4" /> Dialogue Hits
                 </h4>
                 <div className="grid grid-cols-1 gap-2">
-                  {storyline.key_lines.map((line: string, i: number) => (
+                  {(storyline.key_lines as string[]).map((line: string, i: number) => (
                     <div key={i} className="relative group/line">
                       <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-transparent rounded-xl opacity-0 group-hover/line:opacity-100 transition-opacity" />
                       <p className="relative text-[11px] text-white font-black italic bg-gray-950 p-3 rounded-xl border border-gray-800 border-l-yellow-500/80 leading-relaxed shadow-sm">

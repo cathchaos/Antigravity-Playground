@@ -1,19 +1,9 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Users, Plus, Edit2, Trash2, Award, Search } from 'lucide-react';
-import rosterData from '../data/roster.json';
+import { supabase } from '../lib/supabase';
+import { Database } from '../lib/database.types';
 
-interface Wrestler {
-  id: string;
-  name: string;
-  brand: string;
-  alignment: string;
-  status: string;
-  title?: string | null;
-  bio?: string | null;
-  image_url?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
 
 const WWE_CHAMPIONSHIPS = [
   'None',
@@ -36,7 +26,8 @@ const WWE_CHAMPIONSHIPS = [
 ];
 
 export function RosterManager() {
-  const [wrestlers, setWrestlers] = useState<Wrestler[]>(rosterData);
+  const [wrestlers, setWrestlers] = useState<Wrestler[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [brandFilter, setBrandFilter] = useState('All');
   const [alignmentFilter, setAlignmentFilter] = useState('All');
@@ -46,6 +37,28 @@ export function RosterManager() {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
     return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  useEffect(() => {
+    fetchRoster();
+  }, []);
+
+  async function fetchRoster() {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('wrestlers')
+        .select('*')
+        .order('name');
+
+      if (error) throw error;
+      setWrestlers(data || []);
+    } catch (error) {
+      console.error('Error fetching roster:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -69,23 +82,64 @@ export function RosterManager() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (editingId) {
-      setWrestlers(prev => prev.map(w => w.id === editingId ? { ...w, ...formData, updated_at: new Date().toISOString() } : w));
-    } else {
-      const newWrestler = {
-        ...formData,
-        id: Date.now().toString(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      } as Wrestler;
-      setWrestlers(prev => [newWrestler, ...prev]);
+    try {
+      if (editingId) {
+        const { error } = await supabase
+          .from('wrestlers')
+          .update({
+            name: formData.name,
+            brand: formData.brand,
+            alignment: formData.alignment,
+            status: formData.status,
+            title: formData.title || null,
+            bio: formData.bio || null,
+            image_url: formData.image_url || null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', editingId);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('wrestlers')
+          .insert([
+            {
+              name: formData.name,
+              brand: formData.brand,
+              alignment: formData.alignment,
+              status: formData.status,
+              title: formData.title || null,
+              bio: formData.bio || null,
+              image_url: formData.image_url || null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
+          ]);
+
+        if (error) throw error;
+      }
+      fetchRoster();
+      resetForm();
+    } catch (error) {
+      console.error('Error saving wrestler:', error);
+      alert('Error saving wrestler. Please check your permissions.');
     }
-    resetForm();
   }
 
   async function handleDelete(id: string) {
     if (confirm('Are you sure you want to remove this wrestler?')) {
-      setWrestlers(prev => prev.filter(w => w.id !== id));
+      try {
+        const { error } = await supabase
+          .from('wrestlers')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        setWrestlers(prev => prev.filter(w => w.id !== id));
+      } catch (error) {
+        console.error('Error deleting wrestler:', error);
+        alert('Error deleting wrestler. Please check your permissions.');
+      }
     }
   }
 
@@ -154,6 +208,7 @@ export function RosterManager() {
             <input
               type="text"
               placeholder="Search Superstars..."
+              aria-label="Search Superstars"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-gray-900/50 border border-gray-700 rounded-xl py-2.5 pl-10 pr-4 text-white focus:ring-2 focus:ring-red-600 outline-none transition-all"
@@ -162,6 +217,7 @@ export function RosterManager() {
           <select
             value={brandFilter}
             onChange={(e) => setBrandFilter(e.target.value)}
+            aria-label="Filter by Brand"
             className="bg-gray-900/50 border border-gray-700 rounded-xl py-2.5 px-4 text-white outline-none focus:ring-2 focus:ring-red-600"
           >
             <option value="All">All Brands</option>
@@ -172,6 +228,7 @@ export function RosterManager() {
           <select
             value={alignmentFilter}
             onChange={(e) => setAlignmentFilter(e.target.value)}
+            aria-label="Filter by Alignment"
             className="bg-gray-900/50 border border-gray-700 rounded-xl py-2.5 px-4 text-white outline-none focus:ring-2 focus:ring-red-600"
           >
             <option value="All">All Aligns</option>
@@ -181,6 +238,7 @@ export function RosterManager() {
           </select>
           <button
             onClick={() => setIsAdding(!isAdding)}
+            aria-label={isAdding ? "Cancel adding superstar" : "Add new superstar"}
             className="flex items-center gap-2 px-6 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg hover:shadow-red-600/20 active:scale-95"
           >
             <Plus className="w-5 h-5" />
@@ -288,6 +346,11 @@ export function RosterManager() {
         </form>
       )}
 
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredWrestlers.map((wrestler) => (
           <div
@@ -302,17 +365,23 @@ export function RosterManager() {
                   className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110"
                   loading="lazy"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                    (e.target as HTMLImageElement).onerror = () => {
-                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x600/1a1a1a/ffffff?text=' + encodeURIComponent(wrestler.name);
-                    };
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
+                      target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                    } else {
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const fallback = parent.querySelector('.image-fallback');
+                        if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                      }
+                    }
                   }}
                 />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-700">
-                  <Users className="w-20 h-20 opacity-20" />
-                </div>
-              )}
+              ) : null}
+              <div className="image-fallback w-full h-full flex items-center justify-center text-gray-700" style={{ display: wrestler.image_url ? 'none' : 'flex' }}>
+                <Users className="w-20 h-20 opacity-20" />
+              </div>
 
               {/* Overlay Gradients */}
               <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent" />
@@ -327,9 +396,18 @@ export function RosterManager() {
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     const nextTitle = WWE_CHAMPIONSHIPS[(WWE_CHAMPIONSHIPS.indexOf(wrestler.title || 'None') + 1) % WWE_CHAMPIONSHIPS.length];
-                    setWrestlers(prev => prev.map(w => w.id === wrestler.id ? { ...w, title: nextTitle === 'None' ? '' : nextTitle } : w));
+                    const finalTitle = nextTitle === 'None' ? null : nextTitle;
+                    
+                    const { error } = await supabase
+                      .from('wrestlers')
+                      .update({ title: finalTitle })
+                      .eq('id', wrestler.id);
+                    
+                    if (!error) {
+                      setWrestlers(prev => prev.map(w => w.id === wrestler.id ? { ...w, title: finalTitle } : w));
+                    }
                   }}
                   className="p-2 bg-gray-900/90 backdrop-blur-md text-yellow-400 hover:text-black hover:bg-yellow-500 rounded-lg transition-all border border-gray-700 shadow-xl"
                   title="Cycle Championship"
@@ -379,8 +457,9 @@ export function RosterManager() {
           </div>
         ))}
       </div>
+      )}
 
-      {filteredWrestlers.length === 0 && (
+      {!loading && filteredWrestlers.length === 0 && (
         <div className="text-center py-32 bg-gray-800/10 rounded-3xl border border-gray-700/50 border-dashed">
           <Users className="w-20 h-20 text-gray-800 mx-auto mb-6 opacity-50" />
           <h3 className="text-2xl font-black text-white uppercase tracking-widest">No Superstars Found</h3>
