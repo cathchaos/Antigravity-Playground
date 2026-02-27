@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Zap, Plus, Trash2, Flame, Search, Lightbulb } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
@@ -45,6 +45,13 @@ export function FeudTracker() {
     return saved ? JSON.parse(saved) : [];
   });
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
     wrestler1_id: '',
@@ -57,8 +64,8 @@ export function FeudTracker() {
   const wrestlers = rosterData as Wrestler[];
 
   const filteredWrestlers = useMemo(() => {
-    return wrestlers.filter(w => w.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [wrestlers, searchTerm]);
+    return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
+  }, [wrestlers, debouncedSearch]);
 
   const saveFeuds = (newFeuds: Feud[]) => {
     setFeuds(newFeuds);
@@ -182,6 +189,7 @@ export function FeudTracker() {
                     placeholder="Search..."
                     className="w-full bg-gray-900 border border-gray-700 rounded-xl py-2 pl-9 pr-4 text-xs text-white focus:ring-1 focus:ring-yellow-500 outline-none shadow-inner"
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    maxLength={50}
                   />
                 </div>
                 <select
@@ -214,6 +222,7 @@ export function FeudTracker() {
                     placeholder="Search..."
                     className="w-full bg-gray-900 border border-gray-700 rounded-xl py-2 pl-9 pr-4 text-xs text-white focus:ring-1 focus:ring-yellow-500 outline-none shadow-inner"
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    maxLength={50}
                   />
                 </div>
                 <select
@@ -254,7 +263,7 @@ export function FeudTracker() {
                 <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Conflict Status</label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'Active' | 'On Hold' | 'Resolved' })}
                   className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-sm text-white focus:ring-2 focus:ring-yellow-500 outline-none shadow-sm"
                 >
                   <option value="Active">Operational / Active</option>
@@ -280,6 +289,7 @@ export function FeudTracker() {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="w-full bg-gray-900/50 border border-gray-700 rounded-[1.5rem] py-6 px-6 text-sm text-white focus:ring-2 focus:ring-yellow-500 outline-none min-h-[120px] shadow-inner font-medium leading-relaxed"
+                maxLength={1000}
               />
             </div>
           </div>
@@ -316,7 +326,7 @@ export function FeudTracker() {
                 {/* Wrestler 1 */}
                 <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
                   {w1?.image_url ? (
-                    <img src={w1.image_url} alt={w1.name} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000" />
+                    <img src={w1.image_url} alt={w1.name} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000" loading="lazy" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
                   )}
@@ -336,7 +346,7 @@ export function FeudTracker() {
                 {/* Wrestler 2 */}
                 <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
                   {w2?.image_url ? (
-                    <img src={w2.image_url} alt={w2.name} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000" />
+                    <img src={w2.image_url} alt={w2.name} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000" loading="lazy" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
                   )}

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Users, Plus, Edit2, Trash2, Award, Search } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
@@ -20,6 +20,12 @@ export function RosterManager() {
   const [searchTerm, setSearchTerm] = useState('');
   const [brandFilter, setBrandFilter] = useState('All');
   const [alignmentFilter, setAlignmentFilter] = useState('All');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -34,12 +40,12 @@ export function RosterManager() {
 
   const filteredWrestlers = useMemo(() => {
     return wrestlers.filter(w => {
-      const matchesSearch = w.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = w.name.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchesBrand = brandFilter === 'All' || w.brand === brandFilter;
       const matchesAlignment = alignmentFilter === 'All' || w.alignment === alignmentFilter;
       return matchesSearch && matchesBrand && matchesAlignment;
     });
-  }, [wrestlers, searchTerm, brandFilter, alignmentFilter]);
+  }, [wrestlers, debouncedSearch, brandFilter, alignmentFilter]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -143,6 +149,16 @@ export function RosterManager() {
             <option value="SmackDown">SmackDown</option>
             <option value="NXT">NXT</option>
           </select>
+          <select
+            value={alignmentFilter}
+            onChange={(e) => setAlignmentFilter(e.target.value)}
+            className="bg-gray-900/50 border border-gray-700 rounded-xl py-2.5 px-4 text-white outline-none focus:ring-2 focus:ring-red-600"
+          >
+            <option value="All">All Aligns</option>
+            <option value="Face">Face</option>
+            <option value="Heel">Heel</option>
+            <option value="Tweener">Tweener</option>
+          </select>
           <button
             onClick={() => setIsAdding(!isAdding)}
             className="flex items-center gap-2 px-6 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg hover:shadow-red-600/20 active:scale-95"
@@ -165,6 +181,7 @@ export function RosterManager() {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full bg-gray-900/50 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-red-600 outline-none"
                 required
+                maxLength={50}
               />
             </div>
             <div className="space-y-2">
@@ -211,6 +228,7 @@ export function RosterManager() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full bg-gray-900/50 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-red-600 outline-none"
+                maxLength={100}
               />
             </div>
             <div className="space-y-2">
@@ -221,6 +239,7 @@ export function RosterManager() {
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                 className="w-full bg-gray-900/50 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-red-600 outline-none"
+                maxLength={500}
               />
             </div>
           </div>
@@ -254,6 +273,7 @@ export function RosterManager() {
                   src={wrestler.image_url}
                   alt={wrestler.name}
                   className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110"
+                  loading="lazy"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
                     (e.target as HTMLImageElement).onerror = () => {

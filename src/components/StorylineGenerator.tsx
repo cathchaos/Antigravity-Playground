@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, memo, useCallback } from 'react';
 import { Sparkles, Star, Trash2, RefreshCw, Search, ChevronRight, Calendar, MessageSquare, Zap, TrendingUp } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
@@ -536,6 +536,31 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
   },
 ];
 
+interface WrestlerSelectButtonProps {
+  wrestler: Wrestler;
+  isSelected: boolean;
+  onToggle: (id: string) => void;
+}
+
+const WrestlerSelectButton = memo(({ wrestler, isSelected, onToggle }: WrestlerSelectButtonProps) => (
+  <button
+    onClick={() => onToggle(wrestler.id)}
+    className={`relative p-3 rounded-xl border transition-all text-left overflow-hidden ${isSelected
+      ? 'bg-purple-600/20 border-purple-500 shadow-xl'
+      : 'bg-gray-900/50 border-gray-800 hover:border-purple-500/30'
+      }`}
+  >
+    <div className="relative z-10">
+      <p className={`text-xs font-black uppercase tracking-tighter truncate ${isSelected ? 'text-white' : 'text-gray-300'}`}>
+        {wrestler.name}
+      </p>
+      <p className={`text-[9px] font-bold uppercase ${isSelected ? 'text-purple-300' : 'text-gray-600'}`}>
+        {wrestler.brand} • {wrestler.alignment}
+      </p>
+    </div>
+  </button>
+));
+
 export function StorylineGenerator() {
   const [storylines, setStorylines] = useState<Storyline[]>(() => {
     const saved = localStorage.getItem('wwe_storylines');
@@ -543,7 +568,16 @@ export function StorylineGenerator() {
   });
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedType, setSelectedType] = useState('Heel Turn');
+
+  // Performance: Debounce search input to prevent re-renders on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
   const [templatePreference, setTemplatePreference] = useState<'Classic' | 'Fresh'>('Classic');
   const [selectedWrestlers, setSelectedWrestlers] = useState<string[]>([]);
   const [showSaved, setShowSaved] = useState(false);
@@ -561,8 +595,8 @@ export function StorylineGenerator() {
   const wrestlers = rosterData as Wrestler[];
 
   const filteredWrestlers = useMemo(() => {
-    return wrestlers.filter(w => w.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [wrestlers, searchTerm]);
+    return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
+  }, [wrestlers, debouncedSearch]);
 
   const saveStorylines = (newStorylines: Storyline[]) => {
     setStorylines(newStorylines);
@@ -706,11 +740,11 @@ export function StorylineGenerator() {
     saveStorylines(storylines.map(s => s.id === id ? { ...s, favorited: !s.favorited } : s));
   }
 
-  function toggleWrestlerSelection(id: string) {
+  const toggleWrestlerSelection = useCallback((id: string) => {
     setSelectedWrestlers(prev =>
       prev.includes(id) ? prev.filter(wId => wId !== id) : [...prev, id]
     );
-  }
+  }, []);
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -932,27 +966,19 @@ export function StorylineGenerator() {
                     placeholder="Search talent..."
                     className="w-full sm:w-64 bg-gray-900 border border-gray-700 rounded-xl py-2 pl-9 pr-4 text-xs text-white outline-none focus:ring-1 focus:ring-purple-500 shadow-inner"
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    maxLength={50}
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
                 {filteredWrestlers.map((wrestler) => (
-                  <button
+                  <WrestlerSelectButton
                     key={wrestler.id}
-                    onClick={() => toggleWrestlerSelection(wrestler.id)}
-                    className={`relative p-3 rounded-xl border transition-all text-left overflow-hidden ${selectedWrestlers.includes(wrestler.id)
-                      ? 'bg-purple-600/20 border-purple-500 shadow-xl'
-                      : 'bg-gray-900/50 border-gray-800 hover:border-purple-500/30'
-                      }`}
-                  >
-                    <div className="relative z-10">
-                      <p className={`text-xs font-black uppercase tracking-tighter truncate ${selectedWrestlers.includes(wrestler.id) ? 'text-white' : 'text-gray-300'}`}>
-                        {wrestler.name}
-                      </p>
-                      <p className={`text-[9px] font-bold uppercase ${selectedWrestlers.includes(wrestler.id) ? 'text-purple-300' : 'text-gray-600'}`}>{wrestler.brand} • {wrestler.alignment}</p>
-                    </div>
-                  </button>
+                    wrestler={wrestler}
+                    isSelected={selectedWrestlers.includes(wrestler.id)}
+                    onToggle={toggleWrestlerSelection}
+                  />
                 ))}
               </div>
             </div>
@@ -984,8 +1010,16 @@ export function StorylineGenerator() {
   );
 }
 
-function StorylineCard({ storyline, wrestlers, onDelete, onToggleFavorite, getTypeColor }: any) {
-  const participants = storyline.participants.map((id: string) => wrestlers.find((w: any) => w.id === id)).filter(Boolean);
+interface StorylineCardProps {
+  storyline: Storyline;
+  wrestlers: Wrestler[];
+  onDelete: (id: string) => void;
+  onToggleFavorite: (id: string) => void;
+  getTypeColor: (type: string) => string;
+}
+
+const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, getTypeColor }: StorylineCardProps) => {
+  const participants = storyline.participants.map((id: string) => wrestlers.find((w: Wrestler) => w.id === id)).filter((w): w is Wrestler => !!w);
 
   const getStorylineIcon = () => {
     if (storyline.isFresh) return <Sparkles className="w-4 h-4 text-indigo-400" />;
@@ -1032,10 +1066,10 @@ function StorylineCard({ storyline, wrestlers, onDelete, onToggleFavorite, getTy
       {participants.length > 0 && (
         <div className="flex items-center gap-3 mb-8">
           <div className="flex -space-x-3 overflow-hidden">
-            {participants.map((p: any) => (
+            {participants.map((p: Wrestler) => (
               <div key={p.id} className="relative w-12 h-12 rounded-2xl border-4 border-gray-950 bg-gray-900 shadow-xl overflow-hidden group/thumb" title={p.name}>
                 {p.image_url ? (
-                  <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover/thumb:scale-110 transition-all" />
+                  <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover/thumb:scale-110 transition-all" loading="lazy" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-800">{p.name[0]}</div>
                 )}
@@ -1102,4 +1136,4 @@ function StorylineCard({ storyline, wrestlers, onDelete, onToggleFavorite, getTy
       </div>
     </div>
   );
-}
+});

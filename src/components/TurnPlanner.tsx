@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { RefreshCcw, AlertCircle, ChevronRight, MessageSquare, UserCheck, ShieldOff, BrainCircuit, Target } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
@@ -102,6 +102,12 @@ export function TurnPlanner() {
   const [selectedWrestlerId, setSelectedWrestlerId] = useState<string | null>(null);
   const [selectedMethodName, setSelectedMethodName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 200);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const wrestlers = rosterData as Wrestler[];
 
@@ -115,8 +121,8 @@ export function TurnPlanner() {
   const selectedMethod = availableMethods.find(m => m.name === selectedMethodName);
 
   const filteredWrestlers = useMemo(() => {
-    return wrestlers.filter(w => w.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [wrestlers, searchTerm]);
+    return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
+  }, [wrestlers, debouncedSearch]);
 
   function executeTurn() {
     if (!selectedWrestler || !selectedMethod) return;
@@ -335,7 +341,9 @@ export function TurnPlanner() {
   );
 }
 
-const Search = ({ className, ...props }: any) => (
+type SearchProps = React.SVGProps<SVGSVGElement>;
+
+const Search = ({ className, ...props }: SearchProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
