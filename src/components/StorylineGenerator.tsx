@@ -5,6 +5,7 @@ import { Database } from '../lib/database.types';
 
 type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
 type Storyline = Database['public']['Tables']['storylines']['Row'];
+type StorylineInsert = Database['public']['Tables']['storylines']['Insert'];
 
 interface TemplateDefinition {
   title: string;
@@ -620,7 +621,7 @@ export function StorylineGenerator() {
     return wrestlers.filter(w => w.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [wrestlers, debouncedSearch]);
 
-  async function saveStoryline(newStoryline: any) {
+  async function saveStoryline(newStoryline: Partial<Storyline>) {
     try {
       const { error } = await supabase
         .from('storylines')
@@ -634,7 +635,7 @@ export function StorylineGenerator() {
           key_lines: newStoryline.key_lines || [],
           created_at: new Date().toISOString(),
           favorited: false
-        } as any]);
+        } as StorylineInsert]);
 
       if (error) throw error;
       fetchData();
@@ -726,7 +727,7 @@ export function StorylineGenerator() {
       return;
     }
 
-    const newRoadmaps: any[] = [];
+    const newRoadmaps: StorylineInsert[] = [];
     const brandWrestlers = wrestlers.filter(w => w.brand === champ.brand && w.id !== champ.id);
 
     for (let i = 0; i < roadmapData.feudCount; i++) {
@@ -772,7 +773,7 @@ export function StorylineGenerator() {
           key_lines: r.key_lines || [],
           created_at: new Date().toISOString(),
           favorited: false
-        } as any)));
+        } as StorylineInsert)));
 
       if (error) throw error;
       fetchData();
@@ -807,7 +808,7 @@ export function StorylineGenerator() {
     try {
       const { error } = await supabase
         .from('storylines')
-        .update({ favorited: !storyline.favorited } as any)
+        .update({ favorited: !storyline.favorited })
         .eq('id', id);
 
       if (error) throw error;
@@ -1080,26 +1081,26 @@ export function StorylineGenerator() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
           </div>
         ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {storylines.length === 0 ? (
-            <div className="xl:col-span-2 text-center py-40 bg-gray-800/10 rounded-[3rem] border border-gray-700/50 border-dashed">
-              <Sparkles className="w-20 h-20 text-gray-800 mx-auto mb-6 opacity-30" />
-              <h3 className="text-2xl font-black text-white uppercase tracking-widest">Script Vault Empty</h3>
-              <p className="text-gray-500 mt-2 font-medium bg-gray-900/50 px-4 py-1 rounded-full inline-block">Draft a masterpiece to begin your legacy</p>
-            </div>
-          ) : (
-            storylines.map((storyline) => (
-              <StorylineCard
-                key={storyline.id}
-                storyline={storyline}
-                wrestlers={wrestlers}
-                onDelete={handleDelete}
-                onToggleFavorite={toggleFavorite}
-                getTypeColor={getTypeColor}
-              />
-            ))
-          )}
-        </div>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            {storylines.length === 0 ? (
+              <div className="xl:col-span-2 text-center py-40 bg-gray-800/10 rounded-[3rem] border border-gray-700/50 border-dashed">
+                <Sparkles className="w-20 h-20 text-gray-800 mx-auto mb-6 opacity-30" />
+                <h3 className="text-2xl font-black text-white uppercase tracking-widest">Script Vault Empty</h3>
+                <p className="text-gray-500 mt-2 font-medium bg-gray-900/50 px-4 py-1 rounded-full inline-block">Draft a masterpiece to begin your legacy</p>
+              </div>
+            ) : (
+              storylines.map((storyline) => (
+                <StorylineCard
+                  key={storyline.id}
+                  storyline={storyline}
+                  wrestlers={wrestlers}
+                  onDelete={handleDelete}
+                  onToggleFavorite={toggleFavorite}
+                  getTypeColor={getTypeColor}
+                />
+              ))
+            )}
+          </div>
         )
       )}
     </div>
@@ -1160,7 +1161,10 @@ const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, 
                     className="w-full h-full object-cover group-hover/thumb:scale-110 transition-all"
                     loading="lazy"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                      const target = e.target as HTMLImageElement;
+                      if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
+                        target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                      }
                     }}
                   />
                 ) : (

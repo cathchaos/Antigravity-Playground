@@ -346,100 +346,106 @@ export function FeudTracker() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
         </div>
       ) : (
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        {feuds.map((feud) => {
-          const w1 = wrestlers.find(w => w.id === feud.wrestler1_id);
-          const w2 = wrestlers.find(w => w.id === feud.wrestler2_id);
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          {feuds.map((feud) => {
+            const w1 = wrestlers.find(w => w.id === feud.wrestler1_id);
+            const w2 = wrestlers.find(w => w.id === feud.wrestler2_id);
 
-          return (
-            <div
-              key={feud.id}
-              className="group relative bg-gray-800/20 backdrop-blur-md border border-gray-700/50 rounded-[2.5rem] overflow-hidden hover:border-yellow-500/50 transition-all shadow-2xl"
-            >
-              <div className="flex flex-col sm:flex-row h-full">
-                {/* Wrestler 1 */}
-                <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
-                  {w1?.image_url ? (
-                    <img
-                      src={w1.image_url}
-                      alt={w1.name}
-                      className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
-                      loading="lazy"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${w1?.alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{w1?.alignment}</span>
-                    <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{w1?.name || 'Unknown'}</h4>
-                  </div>
-                </div>
-
-                {/* VS Divider */}
-                <div className="relative flex items-center justify-center bg-gray-800 border-x border-gray-700 w-full sm:w-20 h-16 sm:h-auto z-10 shadow-2xl">
-                  <div className="absolute inset-0 bg-yellow-500/5 animate-pulse" />
-                  <span className="text-2xl font-black text-yellow-500 italic z-20 drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">VS</span>
-                </div>
-
-                {/* Wrestler 2 */}
-                <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
-                  {w2?.image_url ? (
-                    <img
-                      src={w2.image_url}
-                      alt={w2.name}
-                      className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
-                      loading="lazy"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6 text-right">
-                    <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${w2?.alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{w2?.alignment}</span>
-                    <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{w2?.name || 'Unknown'}</h4>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feud Details Overlay (Bottom) */}
-              <div className="p-8 bg-gray-900/95 backdrop-blur-xl border-t border-gray-800 gap-6 flex flex-col sm:flex-row items-center">
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex gap-1.5 p-1 px-2 bg-gray-950 rounded-lg border border-gray-800 shadow-inner">
-                      {Array.from({ length: 3 }).map((_, i) => (
-                        <Flame
-                          key={i}
-                          className={`w-5 h-5 ${i < (feud.intensity === 'High' ? 3 : feud.intensity === 'Medium' ? 2 : 1) ? getIntensityColor(feud.intensity) : 'text-gray-900'}`}
-                        />
-                      ))}
+            return (
+              <div
+                key={feud.id}
+                className="group relative bg-gray-800/20 backdrop-blur-md border border-gray-700/50 rounded-[2.5rem] overflow-hidden hover:border-yellow-500/50 transition-all shadow-2xl"
+              >
+                <div className="flex flex-col sm:flex-row h-full">
+                  {/* Wrestler 1 */}
+                  <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
+                    {w1?.image_url ? (
+                      <img
+                        src={w1.image_url}
+                        alt={w1.name}
+                        className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
+                            target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${w1?.alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{w1?.alignment}</span>
+                      <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{w1?.name || 'Unknown'}</h4>
                     </div>
-                    <span className={`text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-xl border-2 shadow-lg ${feud.status === 'Active' ? 'bg-green-600/10 border-green-500/30 text-green-400' : 'bg-gray-800 border-gray-700 text-gray-500'
-                      }`}>
-                      {feud.status}
-                    </span>
                   </div>
-                  <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic font-medium bg-gray-950/50 p-4 rounded-2xl border border-gray-800/50 group-hover:text-gray-300 transition-colors">"{feud.description || 'Confidential scenario data...'}"</p>
+
+                  {/* VS Divider */}
+                  <div className="relative flex items-center justify-center bg-gray-800 border-x border-gray-700 w-full sm:w-20 h-16 sm:h-auto z-10 shadow-2xl">
+                    <div className="absolute inset-0 bg-yellow-500/5 animate-pulse" />
+                    <span className="text-2xl font-black text-yellow-500 italic z-20 drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">VS</span>
+                  </div>
+
+                  {/* Wrestler 2 */}
+                  <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
+                    {w2?.image_url ? (
+                      <img
+                        src={w2.image_url}
+                        alt={w2.name}
+                        className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          if (target.src !== 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg') {
+                            target.src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
+                    <div className="absolute bottom-6 left-6 right-6 text-right">
+                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${w2?.alignment === 'Heel' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-blue-500/10 border-blue-500/30 text-blue-400'}`}>{w2?.alignment}</span>
+                      <h4 className="text-2xl font-black text-white uppercase tracking-tighter italic leading-none mt-2">{w2?.name || 'Unknown'}</h4>
+                    </div>
+                  </div>
                 </div>
 
-                <button
-                  onClick={() => handleDelete(feud.id)}
-                  className="p-4 bg-red-600/10 text-red-500 hover:text-white hover:bg-red-600 rounded-[1.5rem] transition-all border border-red-500/20 shadow-xl group/del active:scale-90"
-                  title="Conclude Rivalry"
-                >
-                  <Trash2 className="w-6 h-6 group-hover/del:scale-110 transition-transform" />
-                </button>
+                {/* Feud Details Overlay (Bottom) */}
+                <div className="p-8 bg-gray-900/95 backdrop-blur-xl border-t border-gray-800 gap-6 flex flex-col sm:flex-row items-center">
+                  <div className="flex-1 space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex gap-1.5 p-1 px-2 bg-gray-950 rounded-lg border border-gray-800 shadow-inner">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <Flame
+                            key={i}
+                            className={`w-5 h-5 ${i < (feud.intensity === 'High' ? 3 : feud.intensity === 'Medium' ? 2 : 1) ? getIntensityColor(feud.intensity) : 'text-gray-900'}`}
+                          />
+                        ))}
+                      </div>
+                      <span className={`text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-xl border-2 shadow-lg ${feud.status === 'Active' ? 'bg-green-600/10 border-green-500/30 text-green-400' : 'bg-gray-800 border-gray-700 text-gray-500'
+                        }`}>
+                        {feud.status}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic font-medium bg-gray-950/50 p-4 rounded-2xl border border-gray-800/50 group-hover:text-gray-300 transition-colors">"{feud.description || 'Confidential scenario data...'}"</p>
+                  </div>
+
+                  <button
+                    onClick={() => handleDelete(feud.id)}
+                    className="p-4 bg-red-600/10 text-red-500 hover:text-white hover:bg-red-600 rounded-[1.5rem] transition-all border border-red-500/20 shadow-xl group/del active:scale-90"
+                    title="Conclude Rivalry"
+                  >
+                    <Trash2 className="w-6 h-6 group-hover/del:scale-110 transition-transform" />
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
       )}
 
       {!loading && feuds.length === 0 && (

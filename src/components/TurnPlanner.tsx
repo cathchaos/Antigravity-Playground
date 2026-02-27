@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { Database } from '../lib/database.types';
 
 type Wrestler = Database['public']['Tables']['wrestlers']['Row'];
+type StorylineInsert = Database['public']['Tables']['storylines']['Insert'];
 
 interface TurnMethod {
   name: string;
@@ -155,7 +156,7 @@ export function TurnPlanner() {
           key_lines: selectedMethod.key_lines,
           created_at: new Date().toISOString(),
           favorited: false,
-        } as any]);
+        } as StorylineInsert]);
 
       if (error) throw error;
 
@@ -186,46 +187,46 @@ export function TurnPlanner() {
         <div className="lg:col-span-1 bg-gray-800/80 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 space-y-4 shadow-xl">
           <label className="text-gray-400 text-xs font-black uppercase tracking-widest pl-1">Superstar</label>
           {loading ? (
-             <div className="flex justify-center py-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
-             </div>
+            <div className="flex justify-center py-10">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+            </div>
           ) : (
-          <>
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search talent..."
-              className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white outline-none focus:ring-1 focus:ring-green-500 shadow-inner"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
-            {filteredWrestlers.map((wrestler) => (
-              <button
-                key={wrestler.id}
-                onClick={() => {
-                  setSelectedWrestlerId(wrestler.id);
-                  setSelectedMethodName(null);
-                }}
-                className={`w-full group relative p-4 rounded-2xl transition-all border ${selectedWrestlerId === wrestler.id
-                  ? 'bg-green-600 border-green-500 text-white shadow-xl translate-x-1'
-                  : 'bg-gray-900/50 border-gray-800 text-gray-400 hover:border-green-600/30'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="text-left">
-                    <div className="font-black uppercase tracking-tighter truncate italic">{wrestler.name}</div>
-                    <div className={`text-[10px] font-bold uppercase ${selectedWrestlerId === wrestler.id ? 'text-white/80' : 'text-gray-600'}`}>
-                      {wrestler.alignment} • {wrestler.brand}
+            <>
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search talent..."
+                  className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white outline-none focus:ring-1 focus:ring-green-500 shadow-inner"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
+                {filteredWrestlers.map((wrestler) => (
+                  <button
+                    key={wrestler.id}
+                    onClick={() => {
+                      setSelectedWrestlerId(wrestler.id);
+                      setSelectedMethodName(null);
+                    }}
+                    className={`w-full group relative p-4 rounded-2xl transition-all border ${selectedWrestlerId === wrestler.id
+                      ? 'bg-green-600 border-green-500 text-white shadow-xl translate-x-1'
+                      : 'bg-gray-900/50 border-gray-800 text-gray-400 hover:border-green-600/30'
+                      }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <div className="font-black uppercase tracking-tighter truncate italic">{wrestler.name}</div>
+                        <div className={`text-[10px] font-bold uppercase ${selectedWrestlerId === wrestler.id ? 'text-white/80' : 'text-gray-600'}`}>
+                          {wrestler.alignment} • {wrestler.brand}
+                        </div>
+                      </div>
+                      <ChevronRight className={`w-5 h-5 transition-transform ${selectedWrestlerId === wrestler.id ? 'translate-x-1' : 'opacity-20'}`} />
                     </div>
-                  </div>
-                  <ChevronRight className={`w-5 h-5 transition-transform ${selectedWrestlerId === wrestler.id ? 'translate-x-1' : 'opacity-20'}`} />
-                </div>
-              </button>
-            ))}
-          </div>
-          </>
+                  </button>
+                ))}
+              </div>
+            </>
           )}
         </div>
 
