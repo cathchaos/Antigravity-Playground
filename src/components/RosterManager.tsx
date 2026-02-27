@@ -15,6 +15,26 @@ interface Wrestler {
   updated_at?: string;
 }
 
+const WWE_CHAMPIONSHIPS = [
+  'None',
+  'World Heavyweight Championship',
+  'Undisputed WWE Championship',
+  'Intercontinental Championship',
+  'United States Championship',
+  'WWE Women\'s Championship',
+  'Women\'s World Championship',
+  'NXT Championship',
+  'NXT Women\'s Championship',
+  'NXT North American Championship',
+  'NXT Women\'s North American Championship',
+  'World Tag Team Championship',
+  'WWE Tag Team Championship',
+  'NXT Tag Team Championship',
+  'WWE Women\'s Tag Team Championship',
+  'WWE Speed Championship',
+  'NXT Heritage Cup'
+];
+
 export function RosterManager() {
   const [wrestlers, setWrestlers] = useState<Wrestler[]>(rosterData);
   const [searchTerm, setSearchTerm] = useState('');
@@ -221,15 +241,22 @@ export function RosterManager() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-gray-400 text-xs font-bold uppercase tracking-widest pl-1">Title</label>
-              <input
-                type="text"
-                placeholder="Current Championships"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full bg-gray-900/50 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-red-600 outline-none"
-                maxLength={100}
-              />
+              <label className="text-gray-400 text-xs font-bold uppercase tracking-widest pl-1">Championship</label>
+              <div className="relative">
+                <select
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value === 'None' ? '' : e.target.value })}
+                  className="w-full bg-gray-900/50 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-red-600 outline-none appearance-none"
+                >
+                  <option value="None">No Championship</option>
+                  {WWE_CHAMPIONSHIPS.filter(t => t !== 'None').map(title => (
+                    <option key={title} value={title}>{title}</option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <Award className="w-4 h-4" />
+                </div>
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-gray-400 text-xs font-bold uppercase tracking-widest pl-1">Image URL</label>
@@ -295,12 +322,24 @@ export function RosterManager() {
                 <button
                   onClick={() => startEdit(wrestler)}
                   className="p-2 bg-gray-900/90 backdrop-blur-md text-blue-400 hover:text-white hover:bg-blue-600 rounded-lg transition-all border border-gray-700 shadow-xl"
+                  title="Edit Superstar"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
+                  onClick={() => {
+                    const nextTitle = WWE_CHAMPIONSHIPS[(WWE_CHAMPIONSHIPS.indexOf(wrestler.title || 'None') + 1) % WWE_CHAMPIONSHIPS.length];
+                    setWrestlers(prev => prev.map(w => w.id === wrestler.id ? { ...w, title: nextTitle === 'None' ? '' : nextTitle } : w));
+                  }}
+                  className="p-2 bg-gray-900/90 backdrop-blur-md text-yellow-400 hover:text-black hover:bg-yellow-500 rounded-lg transition-all border border-gray-700 shadow-xl"
+                  title="Cycle Championship"
+                >
+                  <Award className="w-4 h-4" />
+                </button>
+                <button
                   onClick={() => handleDelete(wrestler.id)}
                   className="p-2 bg-gray-900/90 backdrop-blur-md text-red-400 hover:text-white hover:bg-red-600 rounded-lg transition-all border border-gray-700 shadow-xl"
+                  title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

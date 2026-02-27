@@ -326,7 +326,15 @@ export function FeudTracker() {
                 {/* Wrestler 1 */}
                 <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
                   {w1?.image_url ? (
-                    <img src={w1.image_url} alt={w1.name} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000" loading="lazy" />
+                    <img
+                      src={w1.image_url}
+                      alt={w1.name}
+                      className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                      }}
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
                   )}
@@ -346,7 +354,15 @@ export function FeudTracker() {
                 {/* Wrestler 2 */}
                 <div className="relative flex-1 bg-gray-900 min-h-[240px] sm:min-h-0 overflow-hidden">
                   {w2?.image_url ? (
-                    <img src={w2.image_url} alt={w2.name} className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000" loading="lazy" />
+                    <img
+                      src={w2.image_url}
+                      alt={w2.name}
+                      className="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-1000"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                      }}
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center opacity-10"><Zap className="w-20 h-20" /></div>
                   )}

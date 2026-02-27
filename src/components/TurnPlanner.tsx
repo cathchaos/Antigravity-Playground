@@ -268,7 +268,15 @@ export function TurnPlanner() {
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gray-950 border-2 border-green-500/20 shadow-xl">
                   {selectedWrestler.image_url ? (
-                    <img src={selectedWrestler.image_url} alt={selectedWrestler.name} className="w-full h-full object-cover" />
+                    <img
+                      src={selectedWrestler.image_url}
+                      alt={selectedWrestler.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                      }}
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-900"><UserCheck className="w-6 h-6 text-green-500" /></div>
                   )}

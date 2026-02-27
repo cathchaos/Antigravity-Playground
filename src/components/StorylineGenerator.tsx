@@ -39,6 +39,25 @@ interface StorylineTemplate {
   templates: TemplateDefinition[];
 }
 
+const WWE_CHAMPIONSHIPS = [
+  'World Heavyweight Championship',
+  'Undisputed WWE Championship',
+  'Intercontinental Championship',
+  'United States Championship',
+  'WWE Women\'s Championship',
+  'Women\'s World Championship',
+  'NXT Championship',
+  'NXT Women\'s Championship',
+  'NXT North American Championship',
+  'NXT Women\'s North American Championship',
+  'World Tag Team Championship',
+  'WWE Tag Team Championship',
+  'NXT Tag Team Championship',
+  'WWE Women\'s Tag Team Championship',
+  'WWE Speed Championship',
+  'NXT Heritage Cup'
+];
+
 const STORYLINE_TEMPLATES: StorylineTemplate[] = [
   {
     type: 'Heel Turn',
@@ -589,7 +608,8 @@ export function StorylineGenerator() {
     duration: '3 Months',
     theme: 'Dominant Reign',
     feudCount: 3,
-    feudPreference: 'Fresh' as 'Certain' | 'Fresh'
+    feudPreference: 'Fresh' as 'Certain' | 'Fresh',
+    targetTitle: 'World Heavyweight Championship'
   });
 
   const wrestlers = rosterData as Wrestler[];
@@ -713,7 +733,7 @@ export function StorylineGenerator() {
         newRoadmaps.push({
           id: (Date.now() + i).toString(),
           title: `[Roadmap] ${champ.name} vs ${opponent.name} (${template.title})`,
-          description: `Strategic booking for ${champ.name} during the ${roadmapData.duration} plan.`,
+          description: `Strategic booking for ${champ.name}'s pursuit/defense of the ${roadmapData.targetTitle} during the ${roadmapData.duration} plan.`,
           type: 'Long-term Roadmap',
           participants: [champ.id, opponent.id],
           execution_steps: template.steps,
@@ -832,6 +852,19 @@ export function StorylineGenerator() {
                 <option value="Heel Authority Force">Heel Authority Force</option>
                 <option value="Heroic Redemption Arc">Heroic Redemption Arc</option>
                 <option value="Struggle for Power">Struggle for Power</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-gray-400 text-[10px] font-black uppercase tracking-widest pl-1">Target Championship</label>
+              <select
+                value={roadmapData.targetTitle}
+                onChange={(e) => setRoadmapData({ ...roadmapData, targetTitle: e.target.value })}
+                className="w-full bg-gray-900 border border-gray-700 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-purple-600 outline-none shadow-inner"
+              >
+                {WWE_CHAMPIONSHIPS.map(title => (
+                  <option key={title} value={title}>{title}</option>
+                ))}
               </select>
             </div>
 
@@ -1069,7 +1102,15 @@ const StorylineCard = memo(({ storyline, wrestlers, onDelete, onToggleFavorite, 
             {participants.map((p: Wrestler) => (
               <div key={p.id} className="relative w-12 h-12 rounded-2xl border-4 border-gray-950 bg-gray-900 shadow-xl overflow-hidden group/thumb" title={p.name}>
                 {p.image_url ? (
-                  <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover/thumb:scale-110 transition-all" loading="lazy" />
+                  <img
+                    src={p.image_url}
+                    alt={p.name}
+                    className="w-full h-full object-cover group-hover/thumb:scale-110 transition-all"
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://www.thesmackdownhotel.com/images/roster/placeholder.jpg';
+                    }}
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-800">{p.name[0]}</div>
                 )}

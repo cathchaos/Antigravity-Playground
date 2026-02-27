@@ -38,7 +38,8 @@ async function extractFromFaceHeel(html) {
                 else if (rosterDiv.hasClass('brand-smackdown')) brand = 'SmackDown';
                 else if (rosterDiv.hasClass('brand-nxt')) brand = 'NXT';
 
-                const imageUrl = $(a).find('img:not(.championship):not(.icon-image)').attr('src');
+                const img = $(a).find('img:not(.championship):not(.icon-image)');
+                const imageUrl = img.attr('data-src') || img.attr('src');
 
                 let status = 'Active';
                 const iconImg = $(a).find('.icon-image');
@@ -80,7 +81,8 @@ async function extractFromFullRoster(html) {
         else if (rosterDiv.hasClass('brand-smackdown')) brand = 'SmackDown';
         else if (rosterDiv.hasClass('brand-nxt')) brand = 'NXT';
 
-        const imageUrl = $(a).find('img:not(.championship):not(.icon-image)').attr('src');
+        const img = $(a).find('img:not(.championship):not(.icon-image)');
+        const imageUrl = img.attr('data-src') || img.attr('src');
 
         let status = 'Active';
         const iconImg = $(a).find('.icon-image');
