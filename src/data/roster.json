@@ -1,0 +1,1752 @@
+[
+  {
+    "id": "Y20gcHVuaw",
+    "name": "CM Punk",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "World Heavyweight Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/cm-punk-2025.png"
+  },
+  {
+    "id": "Y29keSByaG9kZXM",
+    "name": "Cody Rhodes",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/cody-rhodes-2025.png"
+  },
+  {
+    "id": "bGEga25pZ2h0",
+    "name": "LA Knight",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/la-knight-2025.png"
+  },
+  {
+    "id": "cmFuZHkgb3J0b24",
+    "name": "Randy Orton",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_r_randy-orton-2023.webp"
+  },
+  {
+    "id": "cm9tYW4gcmVpZ25z",
+    "name": "Roman Reigns",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/roman-reigns-2024-new.png"
+  },
+  {
+    "id": "c2FtaSB6YXlu",
+    "name": "Sami Zayn",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/sami-zayn-2024.png"
+  },
+  {
+    "id": "amFjb2IgZmF0dQ",
+    "name": "Jacob Fatu",
+    "brand": "SmackDown",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jacob-fatu-2025.png"
+  },
+  {
+    "id": "ZHJldyBtY2ludHlyZQ",
+    "name": "Drew McIntyre",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "Undisputed WWE Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/drew-mcintyre-2025.png"
+  },
+  {
+    "id": "ZmlubiBiw6Fsb3I",
+    "name": "Finn Bálor",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/f/finn-balor-2026.png"
+  },
+  {
+    "id": "Z3VudGhlcg",
+    "name": "Gunther",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/g/gunther-2026.png"
+  },
+  {
+    "id": "YXhpb20",
+    "name": "Axiom",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/axiom-2025.png"
+  },
+  {
+    "id": "Ym8gZGFsbGFzIC8gdW5jbGUgaG93ZHk",
+    "name": "Bo Dallas / Uncle Howdy",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bo-dallas-2024-1.png"
+  },
+  {
+    "id": "Y2FybWVsbyBoYXllcw",
+    "name": "Carmelo Hayes",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "WWE United States Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/carmelo-hayes-2025.png"
+  },
+  {
+    "id": "ZGFtaWFuIHByaWVzdA",
+    "name": "Damian Priest",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/damian-priest-2024.png"
+  },
+  {
+    "id": "ZGV4dGVyIGx1bWlz",
+    "name": "Dexter Lumis",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/dexter-lumis-2025.png"
+  },
+  {
+    "id": "ZHJhZ29uIGxlZQ",
+    "name": "Dragon Lee",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/dragon-lee-2025.png"
+  },
+  {
+    "id": "ZXJpY2sgcm93YW4",
+    "name": "Erick Rowan",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/erick-rowan-2025.png"
+  },
+  {
+    "id": "aWxqYSBkcmFndW5vdg",
+    "name": "Ilja Dragunov",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/i/ilja-dragunov-2025.png#joomlaImage://local-images/wrestling/wrestlers/i/ilja-dragunov-2025.png?width=200&height=200"
+  },
+  {
+    "id": "amUndm9uIGV2YW5z",
+    "name": "Je'Von Evans",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jevon-evans-2026.png"
+  },
+  {
+    "id": "amV5IHVzbw",
+    "name": "Jey Uso",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "World Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jey-uso-2025.png"
+  },
+  {
+    "id": "amltbXkgdXNv",
+    "name": "Jimmy Uso",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "World Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jimmy-uso-2025-2.png"
+  },
+  {
+    "id": "am9lIGdhY3k",
+    "name": "Joe Gacy",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/joe-gacy-2025.png"
+  },
+  {
+    "id": "bWF0dCBjYXJkb25h",
+    "name": "Matt Cardona",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/m/matt-cardona-2024-new.png"
+  },
+  {
+    "id": "bmF0aGFuIGZyYXplcg",
+    "name": "Nathan Frazer",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/nathan-frazer.png"
+  },
+  {
+    "id": "cGVudGE",
+    "name": "Penta",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/p/penta-2025-1.png"
+  },
+  {
+    "id": "cmV5IGZlbml4",
+    "name": "Rey Fenix",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/rey-fenix-2025.png"
+  },
+  {
+    "id": "cmV5IG15c3Rlcmlv",
+    "name": "Rey Mysterio",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/rey-mysterio-2025.png"
+  },
+  {
+    "id": "c2hpbnN1a2UgbmFrYW11cmE",
+    "name": "Shinsuke Nakamura",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/shinsuke-nakamura-2025.png"
+  },
+  {
+    "id": "ZWwgZ3JhbmRlIGFtZXJpY2Fubw",
+    "name": "El Grande Americano",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/ludwig-kaiser-el-grande-americano.png"
+  },
+  {
+    "id": "a2l0IHdpbHNvbg",
+    "name": "Kit Wilson",
+    "brand": "SmackDown",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kit-wilson-2025-2.png"
+  },
+  {
+    "id": "Im9yaWdpbmFsIiBlbCBncmFuZGUgYW1lcmljYW5v",
+    "name": "\"Original\" El Grande Americano",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/chad-gable-original-grande-americano.png"
+  },
+  {
+    "id": "YWxlaXN0ZXIgYmxhY2s",
+    "name": "Aleister Black",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/aleister-black-2025-1.png"
+  },
+  {
+    "id": "YXVzdGluIHRoZW9yeQ",
+    "name": "Austin Theory",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/austin-theory-2025.png"
+  },
+  {
+    "id": "ZG9taW5payBteXN0ZXJpbw",
+    "name": "Dominik Mysterio",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Intercontinental Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/dominik-mysterio-2025-1.png"
+  },
+  {
+    "id": "amMgbWF0ZW8",
+    "name": "JC Mateo",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jeff-cobb-2025-1.png"
+  },
+  {
+    "id": "amQgbWNkb25hZ2g",
+    "name": "JD McDonagh",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jd-mcdonagh-2024.png"
+  },
+  {
+    "id": "am9obm55IGdhcmdhbm8",
+    "name": "Johnny Gargano",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/johnny-gargano-2025.png"
+  },
+  {
+    "id": "a29maSBraW5nc3Rvbg",
+    "name": "Kofi Kingston",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kofi-kingston-2025.png"
+  },
+  {
+    "id": "bG9nYW4gcGF1bA",
+    "name": "Logan Paul",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_l_logan-paul-2022.webp"
+  },
+  {
+    "id": "dGhlIG1peg",
+    "name": "The Miz",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/the-miz-2024.png"
+  },
+  {
+    "id": "c29sbyBzaWtvYQ",
+    "name": "Solo Sikoa",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/solo-sikoa-2025-2.png"
+  },
+  {
+    "id": "dGFsbGEgdG9uZ2E",
+    "name": "Talla Tonga",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/h/hikuleo-2025.png"
+  },
+  {
+    "id": "dGFtYSB0b25nYQ",
+    "name": "Tama Tonga",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tama-tonga-2025.png"
+  },
+  {
+    "id": "dG9uZ2EgbG9h",
+    "name": "Tonga Loa",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tonga-loa-2025.png"
+  },
+  {
+    "id": "dHJpY2sgd2lsbGlhbXM",
+    "name": "Trick Williams",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/trick-williams-2025.png"
+  },
+  {
+    "id": "YWtpcmEgdG96YXdh",
+    "name": "Akira Tozawa",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/akira-tozawa-2024.png"
+  },
+  {
+    "id": "YWxleCBzaGVsbGV5",
+    "name": "Alex Shelley",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/alex-shelley-2025.png"
+  },
+  {
+    "id": "YXBvbGxvIGNyZXdz",
+    "name": "Apollo Crews",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/apollo-crews-2022.png"
+  },
+  {
+    "id": "Y2hyaXMgc2FiaW4",
+    "name": "Chris Sabin",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/chris-sabin-2025.png"
+  },
+  {
+    "id": "Y3J1eiBkZWwgdG9ybw",
+    "name": "Cruz Del Toro",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/cruz-del-toro-2025.png"
+  },
+  {
+    "id": "ZXJpaw",
+    "name": "Erik",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/erik-2024.png"
+  },
+  {
+    "id": "aXZhcg",
+    "name": "Ivar",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/i/ivar-2024.png"
+  },
+  {
+    "id": "am9hcXVpbiB3aWxkZQ",
+    "name": "Joaquin Wilde",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/joaquin-wilde-2022.png"
+  },
+  {
+    "id": "b3Rpcw",
+    "name": "Otis",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/o/otis-2025.png"
+  },
+  {
+    "id": "ci10cnV0aA",
+    "name": "R-Truth",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/r-truth-2025-new.png"
+  },
+  {
+    "id": "YW5nZWw",
+    "name": "Angel",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/angel-garza-2025.png"
+  },
+  {
+    "id": "YmVydG8",
+    "name": "Berto",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/h/humberto-carrillo-2025.png"
+  },
+  {
+    "id": "YnJhdm8gYW1lcmljYW5v",
+    "name": "Bravo Americano",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tyler-bate-bravo-americano-2025.png"
+  },
+  {
+    "id": "YnJ1dHVzIGNyZWVk",
+    "name": "Brutus Creed",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/brutus-creed-2026.png"
+  },
+  {
+    "id": "Z3JheXNvbiB3YWxsZXI",
+    "name": "Grayson Waller",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_g_grayson-waller-2023-new.webp"
+  },
+  {
+    "id": "anVsaXVzIGNyZWVk",
+    "name": "Julius Creed",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/julius-creed-2025.png"
+  },
+  {
+    "id": "cmF5byBhbWVyaWNhbm8",
+    "name": "Rayo Americano",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/p/pete-dunne-rayo-americano-2025.png"
+  },
+  {
+    "id": "cnVzZXY",
+    "name": "Rusev",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/rusev-2025.png"
+  },
+  {
+    "id": "am9yZHlubmUgZ3JhY2U",
+    "name": "Jordynne Grace",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jordynne-grace-2026.png"
+  },
+  {
+    "id": "c3RlcGhhbmllIHZhcXVlcg",
+    "name": "Stephanie Vaquer",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "Women's World Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/stephanie-vaquer-2024.png"
+  },
+  {
+    "id": "dGlmZmFueSBzdHJhdHRvbg",
+    "name": "Tiffany Stratton",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tiffany-stratton-2026.png"
+  },
+  {
+    "id": "amFkZSBjYXJnaWxs",
+    "name": "Jade Cargill",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Women's Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jade-cargill-2025.png#joomlaImage://local-images/wrestling/wrestlers/j/jade-cargill-2025.png?width=200&height=200"
+  },
+  {
+    "id": "bGl2IG1vcmdhbg",
+    "name": "Liv Morgan",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/liv-morgan-2026.png"
+  },
+  {
+    "id": "cmFxdWVsIHJvZHJpZ3Vleg",
+    "name": "Raquel Rodriguez",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/raquel-rodriguez-aug-2025.png"
+  },
+  {
+    "id": "YWxleGEgYmxpc3M",
+    "name": "Alexa Bliss",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/alexa-bliss-2025-1.png"
+  },
+  {
+    "id": "YmF5bGV5",
+    "name": "Bayley",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bayley-2025.png"
+  },
+  {
+    "id": "YnJpZSBiZWxsYQ",
+    "name": "Brie Bella",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/brie-bella-2015-new.png"
+  },
+  {
+    "id": "Y2hhcmxvdHRlIGZsYWly",
+    "name": "Charlotte Flair",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/charlotte-flair-2025.png"
+  },
+  {
+    "id": "aXlvIHNreQ",
+    "name": "IYO SKY",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "WWE Women's Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/i/iyo-sky-2025-alt.png"
+  },
+  {
+    "id": "bHlyYSB2YWxreXJpYQ",
+    "name": "Lyra Valkyria",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/lyra-valkyria-2025.png"
+  },
+  {
+    "id": "bWF4eGluZSBkdXByaQ",
+    "name": "Maxxine Dupri",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/m/maxxine-dupri-2025.png"
+  },
+  {
+    "id": "bmlra2kgYmVsbGE",
+    "name": "Nikki Bella",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/nikki-bella-2026.png"
+  },
+  {
+    "id": "cmhlYSByaXBsZXk",
+    "name": "Rhea Ripley",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "WWE Women's Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/rhea-ripley-2025.png"
+  },
+  {
+    "id": "YXN1a2E",
+    "name": "Asuka",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/asuka-2025.png"
+  },
+  {
+    "id": "YmVja3kgbHluY2g",
+    "name": "Becky Lynch",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Women's Intercontinental Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/becky-lynch-2025.png"
+  },
+  {
+    "id": "Z2l1bGlh",
+    "name": "Giulia",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Women's United States Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/g/giulia-2025-new.png"
+  },
+  {
+    "id": "a2Fpcmkgc2FuZQ",
+    "name": "Kairi Sane",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kairi-sane-2025.png"
+  },
+  {
+    "id": "a2lhbmEgamFtZXM",
+    "name": "Kiana James",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kiana-james-2025.png"
+  },
+  {
+    "id": "bGFzaCBsZWdlbmQ",
+    "name": "Lash Legend",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/lash-legend-2025.png"
+  },
+  {
+    "id": "bmF0dGll",
+    "name": "Nattie",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/natalya-2025-nattie.png"
+  },
+  {
+    "id": "bmlhIGpheA",
+    "name": "Nia Jax",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/nia-jax-2025-2.png"
+  },
+  {
+    "id": "emVsaW5h",
+    "name": "Zelina",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/z/zelina-vega-2025-2.png"
+  },
+  {
+    "id": "Yi1mYWI",
+    "name": "B-Fab",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/b-fab-2025.png"
+  },
+  {
+    "id": "bWljaGlu",
+    "name": "Michin",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_m_mia-yim-2024-1.webp"
+  },
+  {
+    "id": "bmlra2kgY3Jvc3M",
+    "name": "Nikki Cross",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/nikki-cross-2025.png"
+  },
+  {
+    "id": "YWxiYSBmeXJl",
+    "name": "Alba Fyre",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/alba-fyre-2025.png"
+  },
+  {
+    "id": "Y2FuZGljZSBsZXJhZQ",
+    "name": "Candice LeRae",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/candice-lerae-2024.png"
+  },
+  {
+    "id": "aXZ5IG5pbGU",
+    "name": "Ivy Nile",
+    "brand": "RAW",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/i/ivy-nile-2025.png#joomlaImage://local-images/wrestling/wrestlers/i/ivy-nile-2025.png?width=200&height=200"
+  },
+  {
+    "id": "YmlhbmNhIGJlbGFpcg",
+    "name": "Bianca Belair",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bianca-belair-2025.png"
+  },
+  {
+    "id": "c2hlYW11cw",
+    "name": "Sheamus",
+    "brand": "RAW",
+    "alignment": "Face",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/sheamus-2024.png"
+  },
+  {
+    "id": "ZWx0b24gcHJpbmNl",
+    "name": "Elton Prince",
+    "brand": "SmackDown",
+    "alignment": "Tweener",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/elton-prince-2025.png"
+  },
+  {
+    "id": "YnJvbiBicmVha2tlcg",
+    "name": "Bron Breakker",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bron-breakker-2025-2.png"
+  },
+  {
+    "id": "YnJvbnNvbiByZWVk",
+    "name": "Bronson Reed",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bronson-reed-2025.png"
+  },
+  {
+    "id": "Y2hlbHNlYSBncmVlbg",
+    "name": "Chelsea Green",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/chelsea-green-2024.png"
+  },
+  {
+    "id": "a2V2aW4gb3dlbnM",
+    "name": "Kevin Owens",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kevin-owens-2024-2.png"
+  },
+  {
+    "id": "cGlwZXIgbml2ZW4",
+    "name": "Piper Niven",
+    "brand": "SmackDown",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/p/piper-niven-2025.png"
+  },
+  {
+    "id": "cm94YW5uZSBwZXJleg",
+    "name": "Roxanne Perez",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/roxanne-perez-2025.png"
+  },
+  {
+    "id": "c2V0aCByb2xsaW5z",
+    "name": "Seth Rollins",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/seth-rollins-2024.png"
+  },
+  {
+    "id": "eGF2aWVyIHdvb2Rz",
+    "name": "Xavier Woods",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/x/xavier-woods-2025.png"
+  },
+  {
+    "id": "em9leSBzdGFyaw",
+    "name": "Zoey Stark",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/z/zoey-stark-2025.png"
+  },
+  {
+    "id": "YW5nZWxvIGRhd2tpbnM",
+    "name": "Angelo Dawkins",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/angelo-dawkins-2024.png"
+  },
+  {
+    "id": "bW9udGV6IGZvcmQ",
+    "name": "Montez Ford",
+    "brand": "SmackDown",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/m/montez-ford-2024.png"
+  },
+  {
+    "id": "bmFvbWk",
+    "name": "Naomi",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/naomi-2025.png"
+  },
+  {
+    "id": "am9lIGhlbmRyeQ",
+    "name": "Joe Hendry",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "NXT Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/joe-hendry-2025.png"
+  },
+  {
+    "id": "dG9ueSBkJ2FuZ2Vsbw",
+    "name": "Tony D'Angelo",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tony-dangelo-2026.png"
+  },
+  {
+    "id": "cmlja3kgc2FpbnRz",
+    "name": "Ricky Saints",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/ricky-starks-2025.png"
+  },
+  {
+    "id": "YW5kcmUgY2hhc2U",
+    "name": "Andre Chase",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/andre-chase-2025-1.png"
+  },
+  {
+    "id": "ZWxpbyBsZWZsZXVy",
+    "name": "Elio LeFleur",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "WWE Speed Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/aigle-blanc-2.png"
+  },
+  {
+    "id": "aGFuayB3YWxrZXI",
+    "name": "Hank Walker",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/h/hank-walker-1.png"
+  },
+  {
+    "id": "bXlsZXMgYm9ybmU",
+    "name": "Myles Borne",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "NXT North American Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/m/myles-borne-2025.png"
+  },
+  {
+    "id": "c2hpbG9oIGhpbGw",
+    "name": "Shiloh Hill",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_s_shiloh-hill.webp"
+  },
+  {
+    "id": "InN1cGVyIiBzZWFuIGxlZ2FjeQ",
+    "name": "\"Super\" Sean Legacy",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/sean-legacy-2023.png"
+  },
+  {
+    "id": "dGFuayBsZWRnZXI",
+    "name": "Tank Ledger",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tank-ledger-2024-2.png"
+  },
+  {
+    "id": "dGF2aW9uIGhlaWdodHM",
+    "name": "Tavion Heights",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tavion-heights-1.png"
+  },
+  {
+    "id": "YnJvbmNvIG5pbWE",
+    "name": "Bronco Nima",
+    "brand": "NXT",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bronco-nima.png"
+  },
+  {
+    "id": "Y2hhcmxpZSBkZW1wc2V5",
+    "name": "Charlie Dempsey",
+    "brand": "NXT",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/charlie-dempsey-2025.png"
+  },
+  {
+    "id": "bHVjaWVuIHByaWNl",
+    "name": "Lucien Price",
+    "brand": "NXT",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/lucien-price-1.png"
+  },
+  {
+    "id": "YnJhZCBiYXlsb3I",
+    "name": "Brad Baylor",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "NXT Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/brad-baylor-2024.png"
+  },
+  {
+    "id": "Y2hhbm5pbmcgInN0YWNrcyIgbG9yZW56bw",
+    "name": "Channing \"Stacks\" Lorenzo",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "NXT Heritage Cup",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/channing-lorenzo-2025-new.png"
+  },
+  {
+    "id": "Y3V0bGVyIGphbWVz",
+    "name": "Cutler James",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/cutler-james-2025-2.png"
+  },
+  {
+    "id": "ZGlvbiBsZW5ub3g",
+    "name": "Dion Lennox",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/dion-lennox-2025-2.png"
+  },
+  {
+    "id": "ZXRoYW4gcGFnZQ",
+    "name": "Ethan Page",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_e_ethan-page-2024.webp"
+  },
+  {
+    "id": "amFja3NvbiBkcmFrZQ",
+    "name": "Jackson Drake",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Evolve Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jackson-drake-2026.png"
+  },
+  {
+    "id": "amFzcGVyIHRyb3k",
+    "name": "Jasper Troy",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jasper-troy-2025-2.png"
+  },
+  {
+    "id": "am9zaCBicmlnZ3M",
+    "name": "Josh Briggs",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/josh-briggs-2024.png"
+  },
+  {
+    "id": "a2VhbnUgY2FydmVy",
+    "name": "Keanu Carver",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_k_keanu-carver-1.webp"
+  },
+  {
+    "id": "bGV4aXMga2luZw",
+    "name": "Lexis King",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/lexis-king-2024.png"
+  },
+  {
+    "id": "bmlrbyB2YW5jZQ",
+    "name": "Niko Vance",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/niko-vance-2024.png"
+  },
+  {
+    "id": "b3NpcmlzIGdyaWZmaW4",
+    "name": "Osiris Griffin",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/o/osiris-griffin-2025-2.png"
+  },
+  {
+    "id": "cmlja3kgc21va2Vz",
+    "name": "Ricky Smokes",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "NXT Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/ricky-smokes-2021.png"
+  },
+  {
+    "id": "c2FxdW9uIHNodWdhcnM",
+    "name": "Saquon Shugars",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/saquon-shugars-2025-2.png"
+  },
+  {
+    "id": "c2hhd24gc3BlYXJz",
+    "name": "Shawn Spears",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_s_shawn-spears-2024.webp"
+  },
+  {
+    "id": "dXJpYWggY29ubm9ycw",
+    "name": "Uriah Connors",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/u/uriah-connors-2025.png"
+  },
+  {
+    "id": "ZWxpIGtuaWdodA",
+    "name": "Eli Knight",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/eli-knight.png"
+  },
+  {
+    "id": "a2FsZSBkaXhvbg",
+    "name": "Kale Dixon",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kale-dixon-2025.png"
+  },
+  {
+    "id": "bWFsaWsgYmxhZGU",
+    "name": "Malik Blade",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/m/malik-blade-2024.png"
+  },
+  {
+    "id": "YnJvb2tzIGplbnNlbg",
+    "name": "Brooks Jensen",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/brooks-jensen-2025-1.png"
+  },
+  {
+    "id": "dHlyaWVrIGlnd2U",
+    "name": "Tyriek Igwe",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tyriek-igwe-new.png"
+  },
+  {
+    "id": "dHlzb24gZHVwb250",
+    "name": "Tyson Dupont",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tyson-dupont-new.png"
+  },
+  {
+    "id": "c29sIHJ1Y2E",
+    "name": "Sol Ruca",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/sol-ruca-2025.png"
+  },
+  {
+    "id": "amFjeSBqYXluZQ",
+    "name": "Jacy Jayne",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "NXT Women's Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jacy-jayne-2024-2.png"
+  },
+  {
+    "id": "amFpZGEgcGFya2Vy",
+    "name": "Jaida Parker",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jaida-parker-2025.png"
+  },
+  {
+    "id": "a2VuZGFsIGdyZXk",
+    "name": "Kendal Grey",
+    "brand": "NXT",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "WWE Evolve Women's Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_k_kendal-grey.webp"
+  },
+  {
+    "id": "bG9sYSB2aWNl",
+    "name": "Lola Vice",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "AAA World Mixed Tag Team Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/lola-vice-2025.png"
+  },
+  {
+    "id": "dGF0dW0gcGF4bGV5",
+    "name": "Tatum Paxley",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tatum-paxley-2026.png"
+  },
+  {
+    "id": "dGhlYSBoYWls",
+    "name": "Thea Hail",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/thea-hail-2025.png"
+  },
+  {
+    "id": "d3JlbiBzaW5jbGFpcg",
+    "name": "Wren Sinclair",
+    "brand": "NXT",
+    "alignment": "Tweener",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/w/wren-sinclair-2025.png"
+  },
+  {
+    "id": "YXJpYW5uYSBncmFjZQ",
+    "name": "Arianna Grace",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "TNA Knockouts World Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/arianna-grace-2025.png"
+  },
+  {
+    "id": "Ymxha2UgbW9ucm9l",
+    "name": "Blake Monroe",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/m/mariah-may-2025.png"
+  },
+  {
+    "id": "ZmFsbG9uIGhlbmxleQ",
+    "name": "Fallon Henley",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "WWE Women's Speed Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/f/fallon-henley-2024-2.png"
+  },
+  {
+    "id": "aXp6aSBkYW1l",
+    "name": "Izzi Dame",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "NXT Women's North American Championship",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/i/izzi-dame-2025-2.png"
+  },
+  {
+    "id": "a2VsYW5pIGpvcmRhbg",
+    "name": "Kelani Jordan",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/kelani-jordan-2024.png"
+  },
+  {
+    "id": "bGFpbmV5IHJlaWQ",
+    "name": "Lainey Reid",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/lainey-reid-2025.png"
+  },
+  {
+    "id": "emFyaWE",
+    "name": "Zaria",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/z/zaria.png"
+  },
+  {
+    "id": "c2t5bGFyIHJheWU",
+    "name": "Skylar Raye",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/skylar-raye-2025.png"
+  },
+  {
+    "id": "dHlyYSBtYWUgc3RlZWxl",
+    "name": "Tyra Mae Steele",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/t/tyra-mae-steele-2025.png"
+  },
+  {
+    "id": "d2VuZHkgY2hvbw",
+    "name": "Wendy Choo",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/w/wendy-choo-2026.png#joomlaImage://local-images/wrestling/wrestlers/w/wendy-choo-2026.png?width=200&height=200"
+  },
+  {
+    "id": "a2FybWVuIHBldHJvdmlj",
+    "name": "Karmen Petrovic",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/k/karmen-petrovic-2025.png"
+  },
+  {
+    "id": "bmlra2l0YSBseW9ucw",
+    "name": "Nikkita Lyons",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/nikkita-lyons-2025.png"
+  },
+  {
+    "id": "YWRyaWFuYSByaXp6bw",
+    "name": "Adriana Rizzo",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/adrianna-rizzo-2024.png"
+  },
+  {
+    "id": "bm9hbSBkYXI",
+    "name": "Noam Dar",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Injured",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/jch-optimize/ng/images_wrestling_wrestlers_n_noam-dar-2023.webp"
+  },
+  {
+    "id": "YWFyb24gZmFyYQ",
+    "name": "Aaron Fara",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/aaron-fara-1.png"
+  },
+  {
+    "id": "YmF5bGV5IGh1bXBocmV5",
+    "name": "Bayley Humphrey",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/b/bayley-humphrey-2025.png"
+  },
+  {
+    "id": "Y2hyaXMgaXNsYW5k",
+    "name": "Chris Island",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/chris-island-2025.png"
+  },
+  {
+    "id": "ZWxpamFoIGhvbHlmaWVsZA",
+    "name": "Elijah Holyfield",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/elijah-holyfield-2025.png"
+  },
+  {
+    "id": "dWxrYSBzYXNha2k",
+    "name": "Ulka Sasaki",
+    "brand": "NXT",
+    "alignment": "Face",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/u/ulka-sasaki-2025.png"
+  },
+  {
+    "id": "bHVjYSBjcnVzaWZpbm8",
+    "name": "Luca Crusifino",
+    "brand": "NXT",
+    "alignment": "Tweener",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/l/luca-crusifino-2025.png"
+  },
+  {
+    "id": "c2lyZW5hIGxpbnRvbg",
+    "name": "Sirena Linton",
+    "brand": "NXT",
+    "alignment": "Heel",
+    "status": "Inactive",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/sirena-linton-2025-3.png"
+  },
+  {
+    "id": "cGF1bCBoZXltYW4",
+    "name": "Paul Heyman",
+    "brand": "RAW",
+    "alignment": "Heel",
+    "status": "Active",
+    "title": "",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/p/paul-heyman-2025.png"
+  },
+  {
+    "id": "YWRhbSBwZWFyY2U",
+    "name": "Adam Pearce",
+    "brand": "RAW",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/adam-pearce-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "bmljayBhbGRpcw",
+    "name": "Nick Aldis",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/n/nick-aldis-2023-new.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "c2hhd24gbWljaGFlbHM",
+    "name": "Shawn Michaels",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/shawn-michaels-2023.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "YWRyaWFuIGJ1dGxlcg",
+    "name": "Adrian Butler",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/adrian-butler-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "Y2hhZCBwYXR0b24",
+    "name": "Chad Patton",
+    "brand": "RAW",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/chad-patton-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "Y2hhcmxlcyByb2JpbnNvbg",
+    "name": "Charles Robinson",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/charles-robinson-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "Y2hpcCBkYW5uaW5n",
+    "name": "Chip Danning",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/c/chip-danning-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZGFsbGFzIGlydmlu",
+    "name": "Dallas Irvin",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/dallas-irvin-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZGFuIGVuZ2xlcg",
+    "name": "Dan Engler",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/dan-engler-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZGFuaWxvIGFuZmliaW8",
+    "name": "Danilo Anfibio",
+    "brand": "RAW",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/danilo-anfibio-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZGFwaGFuaWUgbGFzaGF1bm4",
+    "name": "Daphanie LaShaunn",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/a/aja-smith.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZGVyZWsgc2FuZGVycw",
+    "name": "Derek Sanders",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/d/derek-sanders-2020.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZWRkaWUgb3Jlbmdv",
+    "name": "Eddie Orengo",
+    "brand": "RAW",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/eddie-orengo-2017.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "ZmVsaXggZmVybmFuZGV6",
+    "name": "Felix Fernandez",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/f/felix-fernandez-2021-nxt.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "Z2FyeSB3aWxzb24",
+    "name": "Gary Wilson",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/e/gary-wilson-2022.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "amFzb24gYXllcnM",
+    "name": "Jason Ayers",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jason-ayers.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "amVyZW15IG1hcmN1cw",
+    "name": "Jeremy Marcus",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jeremy-marcus-2023.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "amVzc2lrYSBjYXJy",
+    "name": "Jessika Carr",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/jessika-carr-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "am9leSBnb256YWxleg",
+    "name": "Joey Gonzalez",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/j/joey-gonzalez-2025.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "cm9kIHphcGF0YQ",
+    "name": "Rod Zapata",
+    "brand": "RAW",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/rod-zapata.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "cnlhbiB0cmFu",
+    "name": "Ryan Tran",
+    "brand": "SmackDown",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/r/ryan-tran-2017.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "c2hhd24gYmVubmV0dA",
+    "name": "Shawn Bennett",
+    "brand": "RAW",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/s/shawn-bennett-2021.png",
+    "alignment": "Neutral"
+  },
+  {
+    "id": "dmlja3kgZCdlcnJpY28",
+    "name": "Vicky D'Errico",
+    "brand": "NXT",
+    "status": "Active",
+    "image_url": "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/v/victoria-derrico-2024.png",
+    "alignment": "Neutral"
+  }
+]
