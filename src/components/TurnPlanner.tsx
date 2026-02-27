@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { RefreshCcw, TrendingUp, TrendingDown, AlertCircle, ChevronRight, Zap, MessageSquare, Sparkles, UserCheck, ShieldOff, BrainCircuit, Target } from 'lucide-react';
+import { RefreshCcw, AlertCircle, ChevronRight, MessageSquare, UserCheck, ShieldOff, BrainCircuit, Target } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
 interface Wrestler {
@@ -181,8 +181,8 @@ export function TurnPlanner() {
                   setSelectedMethodName(null);
                 }}
                 className={`w-full group relative p-4 rounded-2xl transition-all border ${selectedWrestlerId === wrestler.id
-                    ? 'bg-green-600 border-green-500 text-white shadow-xl translate-x-1'
-                    : 'bg-gray-900/50 border-gray-800 text-gray-400 hover:border-green-600/30'
+                  ? 'bg-green-600 border-green-500 text-white shadow-xl translate-x-1'
+                  : 'bg-gray-900/50 border-gray-800 text-gray-400 hover:border-green-600/30'
                   }`}
               >
                 <div className="flex items-center justify-between">
@@ -223,8 +223,8 @@ export function TurnPlanner() {
                   key={method.name}
                   onClick={() => setSelectedMethodName(method.name)}
                   className={`w-full text-left p-5 rounded-2xl transition-all border ${selectedMethodName === method.name
-                      ? 'bg-gray-900 border-green-500 shadow-xl ring-1 ring-green-500/20'
-                      : 'bg-gray-900/40 border-gray-800 hover:border-green-500/30'
+                    ? 'bg-gray-900 border-green-500 shadow-xl ring-1 ring-green-500/20'
+                    : 'bg-gray-900/40 border-gray-800 hover:border-green-500/30'
                     }`}
                 >
                   <div className="flex items-center justify-between mb-1">

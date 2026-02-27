@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Zap, Plus, Trash2, Flame, Search, RefreshCw, UserCheck, TrendingUp, Lightbulb, Sparkles } from 'lucide-react';
+import { Zap, Plus, Trash2, Flame, Search, Lightbulb } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
 interface Wrestler {
@@ -50,8 +50,8 @@ export function FeudTracker() {
     wrestler1_id: '',
     wrestler2_id: '',
     description: '',
-    intensity: 'Medium' as const,
-    status: 'Active' as const,
+    intensity: 'Medium' as 'Low' | 'Medium' | 'High',
+    status: 'Active' as 'Active' | 'On Hold' | 'Resolved',
   });
 
   const wrestlers = rosterData as Wrestler[];

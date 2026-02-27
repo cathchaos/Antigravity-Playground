@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sparkles, Star, Trash2, RefreshCw, Lightbulb, Search, ChevronRight, Calendar, MessageSquare, UserPlus, Zap, TrendingUp, Cpu, Hash, Ghost, Heart, Trophy, Monitor } from 'lucide-react';
+import { Sparkles, Star, Trash2, RefreshCw, Search, ChevronRight, Calendar, MessageSquare, Zap, TrendingUp } from 'lucide-react';
 import rosterData from '../data/roster.json';
 
 interface Wrestler {
@@ -82,6 +82,47 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           "The legend you knew is dead. I'm the reality you're afraid to face."
         ]
       },
+      {
+        title: 'The Gaslight Partner',
+        description: 'Jealous tag partner manipulates and blames their partner instead of a beatdown',
+        isFresh: true,
+        steps: [
+          'Heel intentionally misses a save, then blames the partner\'s positioning',
+          'Heel "gaslights" the partner in backstage segments, showing "concern" for their failing health',
+          'Heel convinces the management to put the partner in a series of "re-evaluation" matches',
+          'The partner snaps when they see the heel smiling at their defeat on the monitor',
+        ],
+        promos: [
+          'The "I\'m just doing this for your own good" segment.',
+          'The "Are you sure you\'re okay, [Name]?" concern-trolling promo.',
+        ],
+        key_lines: [
+          "I didn't fail you. You failed the team. I'm just the only one honest enough to tell you.",
+          "Everyone is talking about how you've lost a step. I'm defending you, but you keep proving them right.",
+          "Don't raise your voice at me. Your anger is why we're losing. Just listen to me, for once."
+        ]
+      },
+      {
+        title: 'The Shadow-Ban Boss',
+        description: 'Evil board member removes wrestler from graphics and social media',
+        isFresh: true,
+        steps: [
+          'Wrestler\'s entrance music fails to play, replaced by a generic track',
+          'Wrestler is edited out of the show\'s intro package and social media headers',
+          'A "Technical Error" prevents their name from appearing on the match graphic',
+          'The "Ghost in the Machine" match where they fight to regain their identity',
+        ],
+        promos: [
+          'The Corporate "Optimization" briefing.',
+          'Backstage segment where the boss claims the wrestler is "un-marketable" and thus, invisible.',
+        ],
+        key_lines: [
+          "You weren't fired. You were simply... de-prioritized by the algorithm.",
+          "If you aren't on the website, do you even exist for the shareholders?",
+          "Go ahead, hit me. No one will see it. We've already cut the feed to your specific camera."
+        ]
+      },
+
     ],
   },
   {
@@ -378,7 +419,7 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           'The "Fan\'s Choice" match with a bizarre stipulations',
         ],
         promos: [
-          'The "I'm Wrestling For You" (mocking fans) segment.',
+          'The "I\'m Wrestling For You" (mocking fans) segment.',
           'Heel letting the fan cut a promo on the babyface.',
         ],
         key_lines: [
@@ -405,6 +446,66 @@ const STORYLINE_TEMPLATES: StorylineTemplate[] = [
           "You're just an NPC in my career mode. I'm the one holding the controller.",
           "I'm speedrunning this brand. You're just a cutscene I'm skipping.",
           "Git gud. Your stats are balanced for the mid-card, mine are meta-breaking."
+        ]
+      },
+      {
+        title: 'The Submission Monster',
+        description: 'A giant who dismantles limbs with technical precision rather than power',
+        isFresh: true,
+        steps: [
+          'Monster ignores a strike, focusing solely on an wrist-lock or ankle-pick',
+          'Winning a squash match via a rare, complex technical submission',
+          'Backstage "Anatomy Lesson" where they show how they will break the face',
+          'The "Limb-on-the-Line" match with a specific target (e.g. left arm)',
+        ],
+        promos: [
+          'The "Silence is Violent" slow-motion video package.',
+          'Monster speaking in a calm, intellectual voice about joint manipulation.',
+        ],
+        key_lines: [
+          "Gravity is a lie. Leverage is the only truth in this ring.",
+          "I don't need to throw you. I just need one inch of your tendon.",
+          "You think I'm a beast? No. I'm a surgeon, and the ring is my operating table."
+        ]
+      },
+      {
+        title: 'The Manager Auction',
+        description: 'Two wrestlers compete for the exclusive rights to hire a world-class manager',
+        isFresh: true,
+        steps: [
+          'Legendary manager enters free agency, sparking a bidding war',
+          'Wrestlers try to "impress" the manager with their win-loss record',
+          'Manager sets a series of "Trials" for both potential clients',
+          'The "Signed Contract" match: Winner gets the manager, loser is banned from hiring anyone',
+        ],
+        promos: [
+          'The "Portfolio Review" segment in the ring.',
+          'Manager sitting on a throne at ringside, evaluating both wrestlers.',
+        ],
+        key_lines: [
+          "I'm not a trophy. I'm the key to the main event. And you look like a mid-carder.",
+          "Prove you can follow instructions for 10 minutes, and I'll make you a millionaire.",
+          "This isn't about love. It's about ROI."
+        ]
+      },
+      {
+        title: 'Hard Times Bootcamp',
+        description: 'Returning star tries to institute a 1980s-style bootcamp for "soft" talent',
+        isFresh: true,
+        steps: [
+          'Returning star interrupts a locker room party, calling it "unprofessional"',
+          'Forcing the locker room to do 500 squats before the show starts',
+          'Attacking anyone using "fancy" modern wrestling flips',
+          'The "Old School Rules" match: No mats, no pads, just "hard times"',
+        ],
+        promos: [
+          'The "Locker Room has gone soft" rant.',
+          'The "In my day..." history lesson that lasts way too long.',
+        ],
+        key_lines: [
+          "You guys spent two hours on your hair and ten minutes on your bridge. Soft.",
+          "The business didn't leave you. You left the business for a TikTok dance.",
+          "I'm going to beat the 1980s back into your 2026 heart."
         ]
       },
     ],
